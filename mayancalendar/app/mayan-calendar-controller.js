@@ -64,16 +64,17 @@ export const MayanCalendarController = (function() {
 		}
 		*/
 		
-		const uiModules = [
+		const uiModules = {
 			TzolkinUI
 			,HaabUI
 			,LongCountUI
 			,DreamSpellUI
 			,GregorianUI
 			,JulianUI
-		];
+		};
 
-		for (const ui of uiModules) {
+		// for (const ui of uiModules) { // when it was an array
+		for (const [name, ui] of Object.entries(uiModules)) {
 			// if (ui && typeof ui !== "undefined" && typeof ui.init === "function") {
 			if (ui && typeof ui.init === "function") {
 				console.log(`→ Initializing ${name}`);
