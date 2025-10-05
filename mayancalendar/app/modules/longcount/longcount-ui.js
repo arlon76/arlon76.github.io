@@ -83,7 +83,7 @@ export const LongCountUI = (function() {
 			const $el = $container.find(`#${id}`);
 			$el.empty();
 			for (let i = glyphs.length - 1; i >= 0; i--) {
-				$el.append(`<div class="mayan-digit">${glyphs[i]}</div>`);
+				$el.append(`<div class="mayan-numeral">${glyphs[i]}</div>`);
 			}
 		}
 
