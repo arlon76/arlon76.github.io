@@ -22,7 +22,7 @@ import { CalendarNavigation } from './util/calendar-navigation.js';
 
 export const MayanCalendarController = (function() {
 	
-	console.log("✅ mayan-calendar-controller.js loaded, line 12 of the controller");
+	console.log("✅ mayan-calendar-controller.js loaded, line 25 of the controller");
 	
 	function init(containerSelector) {
 		console.log("✅ MayanCalendarController.init called, line 15 of the controller");
