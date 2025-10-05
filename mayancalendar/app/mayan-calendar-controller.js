@@ -17,7 +17,8 @@ import { GregorianUI } from './modules/gregorian/gregorian-ui.js';
 import { JulianUI } from './modules/julian/julian-ui.js';
 
 //next/prev/today buttons
-import { CalendarNavigation } from '/app/util/calendar-navigation.js';
+// import { CalendarNavigation } from '/app/util/calendar-navigation.js';
+import { CalendarNavigation } from './util/calendar-navigation.js';
 
 export const MayanCalendarController = (function() {
 	
