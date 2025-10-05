@@ -97,7 +97,7 @@ export const MayanCalendarController = (function() {
 		});
 	}
 
-	return { init };
+	return { init, CalendarNavigation };
 })();
 
 window.MayanCalendarController = MayanCalendarController;

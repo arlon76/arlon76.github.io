@@ -367,7 +367,7 @@
 			   ensure all top-level children stretch equally */
 			#mayan-calendar > div {
 			  max-width: 100%;
-			  width: 100%;
+			  // width: 100%;
 			  box-sizing: border-box;
 			}
 
@@ -436,6 +436,112 @@
 				  white-space: normal;
 				  word-break: break-word;
 				} ///////// This doesn't do anything but if it did, what it would do is limit the length of the tooltip
+				
+				
+				/* 3rd box on the page	*/
+				#credits {
+					text-align: center;
+					font-size: 0.9rem;
+					color: #555;
+				}
+				#credits img {
+					vertical-align: middle;
+				}
+				
+				/*	cool-link(s) */
+				.cool-link {
+					color: #888;                /* smooth grey */
+					text-decoration: none;     /* no underline */
+					transition: color 0.3s ease; /* smooth transitions */
+				}
+
+				.cool-link:hover {
+					color: orange;             /* highlight on hover */
+				}
+
+				.cool-link:active {
+					color: hotpink;            /* bright pink on mouse-down */
+				}
+
+				.cool-link:visited {
+					color: #555;               /* darker grey if visited */
+				}
+				
+				/* Floating nav buttons: */
+				.calendar-nav-fixed {
+					position: fixed;
+		//			bottom: 1rem; // // // // // // // // // // // // // // // // // // // //
+		//			top: 1rem; // // // // // // // // // // // // // // // // // // // //
+					left: 50%;
+					// transform: translateX(-50%);
+				//	transform: translateX(50%);
+				//	transform: translateX(47%);
+					transform: translateX(45%);
+					// background: rgba(255, 255, 255, 0.85);
+					// box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+					// border-radius: 8px;
+					padding: 0.5rem 1rem;
+					z-index: 1000;
+					display: flex;
+					gap: 1rem;
+					// backdrop-filter: blur(4px);
+				}
+				.calendar-nav-fixed button {
+					all: unset;
+					font-size: 1.25rem;
+					font-weight: bold;
+					cursor: pointer;
+					padding: 0.25em 0.5em;
+					transition: color 0.2s ease, transform 0.2s ease;
+				}
+				.calendar-nav-fixed button:hover {
+					color: #007bff;
+					transform: scale(1.15);
+				}
+
+				/* Rounded nav buttons: */
+				.floating-nav {
+					position: fixed;
+			//		bottom: 2rem; // // // // // // // // // // // // // // // // // // // //
+					top: 2rem; // // // // // // // // // // // // // // // // // // // //
+					// right: 2rem;
+					display: flex;
+					// flex-direction: column;
+					gap: 1rem;
+					z-index: 9999;
+					text-align:center;
+					bottom: auto;
+				}
+
+				.floating-nav button {
+					width: 56px;
+					height: 56px;
+					border-radius: 50%;
+					background: rgba(255, 255, 255, 0.7);
+					box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+					border: none;
+					cursor: pointer;
+					font-size: 3.0rem;
+					backdrop-filter: blur(5px); /* Optional for glassy effect */
+					transition: transform 0.2s;
+				}
+
+				.floating-nav button:hover {
+					transform: scale(1.1);
+					background: rgba(255, 255, 255, 0.9);
+				}
+
+				/* Shift nav buttons up upon scroll all the way down*/
+			//	.floating-nav.floating-nav--shifted {
+			//		position: absolute;
+			//		bottom: 150px; /* Adjust this to match footer/banner height */
+			//	}
+				
+				.floating-nav-wrapper {
+				  position: relative;
+				  z-index: 1000; /* Make sure it's above footer content */
+				}
+
 		</style>
 
 		<!-- Load jQuery from CDN -->
@@ -518,36 +624,20 @@
 			});
 						
 		</script>
+		
+		<script>
+			document.addEventListener('DOMContentLoaded', () => {
+				window.addEventListener('scroll', MayanCalendarController.CalendarNavigation.updateFloatingNavPosition);
+				window.addEventListener('resize', MayanCalendarController.CalendarNavigation.updateFloatingNavPosition);
+				
+				// document.addEventListener('DOMContentLoaded', MayanCalendarController.CalendarNavigation.updateFloatingNavPosition);
+				
+				// Initial position update
+				// MayanCalendarController.CalendarNavigation.updateFloatingNavPosition();
+			});
+		</script>
 		<div id="credits" class="wide-container info-box">
 			<p style="text-align: center; font-size: 0.9rem; color: #666;">
-			  <style type="text/css">
-				#credits {
-					text-align: center;
-					font-size: 0.9rem;
-					color: #555;
-				}
-				#credits img {
-					vertical-align: middle;
-				}
-				
-				.cool-link {
-					color: #888;                /* smooth grey */
-					text-decoration: none;     /* no underline */
-					transition: color 0.3s ease; /* smooth transitions */
-				}
-
-				.cool-link:hover {
-					color: orange;             /* highlight on hover */
-				}
-
-				.cool-link:active {
-					color: hotpink;            /* bright pink on mouse-down */
-				}
-
-				.cool-link:visited {
-					color: #555;               /* darker grey if visited */
-				}
-			</style>
 			<br><a class="cool-link" href="/launchblaster">Launch Blaster</a> • <a class="cool-link" href="/">More</a>
 			
 			</p>
