@@ -3,10 +3,10 @@ export const CalendarNavigation = (function () {
 	let $container;
 	let currentDate = new Date();
 	let allUIs;
-	console.log("✅ CalendarNavigation loaded, line 6 of calendar-navigation.js");
+	// console.log("✅ CalendarNavigation loaded, line 6 of calendar-navigation.js");
 	function init(containerSelector, allUIsParam) {
 		allUIs=allUIsParam;
-		console.log("✅ CalendarNavigation init() happening, line 9 of calendar-navigation.js");
+		// console.log("✅ CalendarNavigation init() happening, line 9 of calendar-navigation.js");
 		$container = $(containerSelector);
 
 		if ($container.find(".calendar-nav").length === 0) {
