@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Skateboarder Game</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #111;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<canvas id="gameCanvas"></canvas>
+<script>
+
+
+// ================== Canvas Setup ==================
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+let width, height;
+function resize() {
+  width = window.innerWidth;
+  height = window.innerHeight;
+  canvas.width = width;
+  canvas.height = height;
+}
+window.addEventListener("resize", resize);
+resize();
+
+// ================== Game Constants ==================
+const ROAD_WIDTH = width * 0.4;
+const LANE_MARK_WIDTH = 6;
+const DASH_LENGTH = 30;
+const DASH_GAP = 20;
+const EDGE_WIDTH = (width - ROAD_WIDTH) / 2;
+const RAMP_WIDTH = 60;
+const RAMP_HEIGHT = 20;
+const SKATER_EMOJI = "🛹";
+const MAX_SPEED = 6;
+
+// ================== Skater State ==================
+let skater = {
+  x: width / 2,
+  y: height * 0.8,
+  speedX: 0,
+  maxSpeedX: 5,
+  angle: -75,
+  points: 0,
+  hopY: 0,
+  hopTime: Math.PI,
+};
+
+// Ramps & Dashes
+let ramps = [];
+let dashOffset = 0;
+let keys = {};
+let paused = false;
+let lastRampTime = 0;
+
+// Dust trail particles
+let particles = [];
+
+// ================== Audio Setup ==================
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+let musicPlaying = false;
+let musicInitialized = false;
+let musicStarted = false;
+let musicIntervals = {
+  //melody: null,
+  //fast: null,
+  pulse: null,
+  bass: null, // 👈 new
+};
+
+
+function playHopSound_no_clack_1() {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = "triangle";
+	osc.type = "sawtooth";
+  osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+  osc.frequency.linearRampToValueAtTime(1200, audioCtx.currentTime + 0.15);
+  gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+  osc.connect(gain).connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.2);
+}
+function playHopSound_no_clack_2() {
+    // existing launch sound
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+	osc.type = "triangle";
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.2);
+}
+function playHopSound() {
+  playClack();
+  setTimeout(() => {
+		playHopSound_no_clack_1() 
+		playHopSound_no_clack_2() 
+		setTimeout(playClack, 180);
+  }, 30);
+  // setTimeout(playClack, 80);
+}
+
+function playClack() {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = "square";
+  osc.frequency.setValueAtTime(2000, audioCtx.currentTime);
+  gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+  osc.connect(gain).connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.06);
+}
+
+// Simple 8-bit boss-style background music
+function startMusic_1() {
+  if (musicPlaying) return;
+  musicPlaying = true;
+
+  const tempo = 180; // Faster tempo
+  const notes = [220, 0, 330, 0, 440, 0, 392, 0, 330, 0, 220];
+  const fastNotes = [880, 988, 1046, 988, 880, 784, 880, 988]; // Higher fast layer
+
+  let time = audioCtx.currentTime;
+
+  for (let i = 0; i < 100; i++) {
+    // Base melody (lower layer)
+    const note = notes[i % notes.length];
+    if (note > 0) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.frequency.setValueAtTime(note, time);
+      osc.type = "square";
+      gain.gain.setValueAtTime(0.06, time);
+      gain.gain.linearRampToValueAtTime(0.001, time + 0.25);
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start(time);
+      osc.stop(time + 0.3);
+    }
+    time += 60 / tempo;
+  }
+
+  // Faster counter layer (higher, chirpier)
+  let fastTime = audioCtx.currentTime;
+  const fastTempo = tempo * 2; // Double tempo
+
+  for (let i = 0; i < 200; i++) {
+    const note = fastNotes[i % fastNotes.length];
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.frequency.setValueAtTime(note, fastTime);
+    osc.type = "triangle";
+    gain.gain.setValueAtTime(0.03, fastTime);
+    gain.gain.linearRampToValueAtTime(0.001, fastTime + 0.1);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(fastTime);
+    osc.stop(fastTime + 0.12);
+    fastTime += 60 / fastTempo;
+  }
+}
+function startMusic() {
+  if (musicIntervals.melody || musicIntervals.fast || musicIntervals.pulse) return;
+  if (!musicInitialized) {
+    musicPlaying = true;
+    musicInitialized = true;
+  }
+  const melodyNotes = [220, 0, 330, 0, 440, 0, 392, 0, 330, 0, 220];
+  const fastNotes = [880, 988, 1046, 988, 880, 784, 880, 988]; // Higher fast layer
+  const pulseFreq = 60; // Low pulse like a bass drum
+
+  let melodyIndex = 0;
+  let fastIndex = 0;
+  let pulseIndex = 0;
+
+  const tempo = 180;
+  const intervalLength = (60 / tempo) * 1000;
+
+  // Melody Layer
+  musicIntervals.melody = setInterval(() => {
+    if (!musicPlaying) return;
+
+    const note = melodyNotes[melodyIndex % melodyNotes.length];
+    if (note) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "square";
+      osc.frequency.setValueAtTime(note, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.3);
+    }
+    melodyIndex++;
+  }, intervalLength);
+
+  // Fast Blip Layer
+  musicIntervals.fast = setInterval(() => {
+    if (!musicPlaying) return;
+
+    const note = fastNotes[fastIndex % fastNotes.length];
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(note, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.12);
+    fastIndex++;
+  }, intervalLength / 2); // Twice as fast
+
+  // New Pulse Layer (Bass Thump)
+  musicIntervals.pulse = setInterval(() => {
+    if (!musicPlaying) return;
+  console.log("Line 226 'pulse' playing a note ");
+
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(pulseFreq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.25);
+    pulseIndex++;
+  }, intervalLength * 2); // Slower pulse
+
+
+  
+}
+
+
+// ================== Input ==================
+document.addEventListener("keydown", e => {
+  keys[e.key] = true;
+  // if (e.key === " " || e.key.toLowerCase() === "p") paused = !paused;
+  if(false)if (e.key === " " || e.key.toLowerCase() === "p") {
+  paused = !paused;
+
+  // Pause or resume audio context
+  if (paused && audioCtx.state === "running") {
+    audioCtx.suspend();
+  } else if (!paused && audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+}
+if (e.key === " " || e.key.toLowerCase() === "p") {
+  paused = !paused;
+
+  if (paused) {
+    musicPlaying = false;
+    for (let key in musicIntervals) {
+      clearInterval(musicIntervals[key]);
+      musicIntervals[key] = null;
+    }
+    if (audioCtx.state === "running") audioCtx.suspend();
+  } else {
+    if (audioCtx.state === "suspended") audioCtx.resume();
+    musicPlaying = true;
+    startMusic(); // restart intervals
+  }
+}
+  if (audioCtx.state === "suspended") audioCtx.resume();
+  startMusic();
+});
+document.addEventListener("keyup", e => {
+  keys[e.key] = false;
+});
+
+// ================== Game Loop ==================
+function gameLoop() {
+  if (!paused) {
+	if(!musicStarted)startMusic();
+    update();
+    draw();
+  } else {
+    drawPause();
+  }
+  requestAnimationFrame(gameLoop);
+}
+
+function update() {
+  // Move skater left/right
+  if (keys["ArrowLeft"]) skater.speedX -= 0.2;
+  if (keys["ArrowRight"]) skater.speedX += 0.2;
+  skater.speedX *= 0.95;
+  skater.speedX = Math.max(-skater.maxSpeedX, Math.min(skater.maxSpeedX, skater.speedX));
+  skater.x += skater.speedX;
+
+  const minX = EDGE_WIDTH + 20;
+  const maxX = width - EDGE_WIDTH - 20;
+  skater.x = Math.max(minX, Math.min(maxX, skater.x));
+  skater.angle = -75 + (skater.speedX * 10);
+
+  dashOffset += 4;
+
+  // Generate ramps
+  if (Date.now() - lastRampTime > 1000 + Math.random() * 2000) {
+    ramps.push({
+      x: EDGE_WIDTH + Math.random() * (ROAD_WIDTH - RAMP_WIDTH),
+      y: -RAMP_HEIGHT,
+      hit: false
+    });
+    lastRampTime = Date.now();
+  }
+
+  // Move ramps and check collision
+  for (let ramp of ramps) {
+    ramp.y += 4;
+    if (
+      !ramp.hit &&
+      ramp.y + RAMP_HEIGHT > skater.y - 10 &&
+      ramp.y < skater.y + 10 &&
+      skater.x > ramp.x &&
+      skater.x < ramp.x + RAMP_WIDTH
+    ) {
+      ramp.hit = true;
+      skater.points += 10;
+      skater.hopTime = 0;
+      playHopSound();
+      spawnParticles(skater.x, skater.y);
+    }
+  }
+  ramps = ramps.filter(r => r.y < height + RAMP_HEIGHT);
+
+  // Hop animation
+  if (skater.hopTime < Math.PI) {
+    skater.hopY = Math.sin(skater.hopTime) * 15;
+    skater.hopTime += 0.15;
+  } else {
+    skater.hopY = 0;
+  }
+
+  // Update particles
+  particles.forEach(p => {
+    p.y += p.vy;
+    p.alpha -= 0.03;
+  });
+  particles = particles.filter(p => p.alpha > 0);
+}
+
+// Dust trail particles
+function spawnParticles(x, y) {
+  for (let i = 0; i < 10; i++) {
+    particles.push({
+      x: x + (Math.random() - 0.5) * 20,
+      y: y + (Math.random() - 0.5) * 10,
+      vy: 1 + Math.random() * 2,
+      alpha: 1,
+      radius: 2 + Math.random() * 3
+    });
+  }
+}
+
+// ================== Drawing ==================
+function draw() {
+  ctx.clearRect(0, 0, width, height);
+
+  // Green sides
+  ctx.fillStyle = "#00cc66";
+  ctx.fillRect(0, 0, EDGE_WIDTH, height);
+  ctx.fillRect(width - EDGE_WIDTH, 0, EDGE_WIDTH, height);
+
+  // Road
+  ctx.fillStyle = "#666";
+  ctx.fillRect(EDGE_WIDTH, 0, ROAD_WIDTH, height);
+
+  // Dashes
+  ctx.strokeStyle = "yellow";
+  ctx.lineWidth = LANE_MARK_WIDTH;
+  ctx.setLineDash([DASH_LENGTH, DASH_GAP]);
+  ctx.lineDashOffset = -dashOffset;
+  ctx.beginPath();
+  ctx.moveTo(width / 2, 0);
+  ctx.lineTo(width / 2, height);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Ramps
+  for (let ramp of ramps) {
+    ctx.fillStyle = "saddlebrown";
+    ctx.fillRect(ramp.x, ramp.y, RAMP_WIDTH, RAMP_HEIGHT);
+  }
+
+  // Particles (dust)
+  for (let p of particles) {
+    ctx.fillStyle = `rgba(255,255,255,${p.alpha})`;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y - skater.hopY, p.radius, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Skater
+  ctx.save();
+  ctx.translate(skater.x, skater.y - skater.hopY);
+  ctx.rotate(skater.angle * Math.PI / 180);
+  ctx.font = "40px sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  //ctx.fillText("😎", skater.x, skater.y - 15);
+  ctx.fillText(SKATER_EMOJI, 0, 0);
+  ctx.fillText("😎", -15, -15 );
+  ctx.restore();
+
+  // Points - now inside the road
+  ctx.fillStyle = "#fff";
+  ctx.font = "24px sans-serif";
+  ctx.textAlign = "left";
+  ctx.fillText(`Points: ${skater.points}`, EDGE_WIDTH + 20, 30);
+}
+
+function drawPause() {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+  ctx.fillRect(0, 0, width, height);
+  ctx.fillStyle = "#fff";
+  ctx.font = "48px sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("Paused", width / 2, height / 2);
+}
+
+// Start game loop
+gameLoop();
+</script>
+
+</body>
+</html>
