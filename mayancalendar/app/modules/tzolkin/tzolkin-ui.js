@@ -43,7 +43,7 @@ export const TzolkinUI = (function() {
 			const now = date;
 			const { toneNumber: tone, dayName, glyph } = Tzolkin.getTzolkin(date);
 
-			console.log(`Tzolkin → Tone: ${tone}, Day: ${dayName}, Glyph: ${glyph}`);
+			// console.log(`Tzolkin → Tone: ${tone}, Day: ${dayName}, Glyph: ${glyph}`);
 			
 			let $dayDiv = $container.find(".day-name"); // line 34
 			let $toneDiv = $container.find(".tone");
