@@ -22,16 +22,16 @@ import { CalendarNavigation } from './util/calendar-navigation.js';
 
 export const MayanCalendarController = (function() {
 	
-	console.log("✅ mayan-calendar-controller.js loaded, line 25 of the controller");
+	// console.log("✅ mayan-calendar-controller.js loaded, line 25 of the controller");
 	
 	function init(containerSelector) {
-		console.log("✅ MayanCalendarController.init called, line 15 of the controller");
+		// console.log("✅ MayanCalendarController.init called, line 28 of the controller");
 		const $container = $(containerSelector);
 		if (!$container.length) {
 			console.error(`Container ${containerSelector} not found.`);
 			return;
 		}
-		console.log("✅ MayanCalendarController init happening, line 24 of the controller");
+		// console.log("✅ MayanCalendarController init happening, line 34 of the controller");
 		
 		let allUIs = [];
 		
