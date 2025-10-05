@@ -1,1 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Mayan Calendar Plugin</title>
+		<style>
+			body {
+				font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+				margin: 2rem;
+				background: #f9f9f9;
+				color: #222;
+			}
+
+			#mayan-calendar {
+				max-width: 96%;
+				padding: 1rem;
+				background: rgba(255, 255, 255, 0.55);
+				border-radius: 8px;
+				box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+			}
+
+			.glyph {
+				width: 48px;
+				height: 48px;
+				vertical-align: middle;
+				margin-right: 0.5rem;
+				display: inline-block;
+				font-size: 2rem;
+			}
+
+			.day-name {
+				font-weight: 700;
+				font-size: 1.25rem;
+				margin-bottom: 0.5rem;
+			}
+
+			.tone {
+				font-weight: 600;
+				font-size: 1rem;
+				margin-bottom: 0.5rem;
+			}
+
+			.haab {
+				font-weight: 500;
+				font-size: 1rem;
+				margin-top: 1rem;
+			}
+			.glyph {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				justify-content: center;
+				font-size: 2rem;
+				white-space: nowrap;
+				align-items: left;
+				justify-content: left;
+			}
+		
+			body {
+				//background-image: url('https://pbs.twimg.com/media/Fy-CMDHaEAYAle5?format=jpg');
+				//background-image: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhHWHBM_OsATgzytLAxwrN4zDCL01nP3iplkACP7Dmz7D0lxIcXns-B3Hc5j8rwL6qZD-CaDkHTWlxEVAsEDh1VOs_3NDLvDsKTAtz16QmC6qumf81S4GREv-FIWPwb-XIOyzX19unwnHU/s1600/mayan-calendar.jpg');
+				background-image: url('https://www.chaacreek.com/sites/default/files/styles/home_carousel/public/how-mayan-calendar-works-chaa-creek-1.jpg');
+				// background-image: url('https://upload.wikimedia.org/wikipedia/commons/c/cd/Original_Mayan_Calendar_Stone_-_El_Cedral_-_Cozumel_-_Mexico.jpg');
+				// background-image: url('https://wallpaper-house.com/data/out/6/wallpaper2you_127882.jpg');
+				background-size: cover;
+				background-attachment: fixed;
+				background-position: center;
+			}
+body {
+  /* Hotlink Wikimedia Mayan glyph image as background */
+
+  // background-image: url('https://upload.wikimedia.org/wikipedia/commons/c/cd/Original_Mayan_Calendar_Stone_-_El_Cedral_-_Cozumel_-_Mexico.jpg');
+
+  /* Overlay a dark translucent layer using a CSS gradient */
+  // background-image:
+  //   linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+  //   url('https://upload.wikimedia.org/wikipedia/commons/c/cd/Original_Mayan_Calendar_Stone_-_El_Cedral_-_Cozumel_-_Mexico.jpg');
+
+  // background-size: cover;
+  // background-position: center center;
+  // background-repeat: no-repeat;
+
+}
+			.info-box {
+				background: rgba(255, 255, 255, 0.75);
+				padding: 1rem;
+				border-radius: 12px;
+				max-width: 600px;
+				margin: 2rem auto;
+			}
+			.arrow-button {
+				all: unset; /* Removes browser styles: border, padding, background, etc. */
+				font-size: 2rem;
+				font-weight: bold;
+				cursor: pointer;
+			}
+			.arrow-button:hover {
+				color: #007bff;
+				transform: scale(1.1);
+			}
+			@font-face {
+			  font-family: "NotoMayan";
+			  src: url("app/resources/font/NotoSansMayanNumerals-v2.001/NotoSansMayanNumerals/unhinted/ttf/NotoSansMayanNumerals-Regular.woff2")
+				   format("truetype");
+			  font-weight: normal;
+			  font-style: normal;
+			  font-display: swap;
+			}
+
+			.mayan-numeral {
+			  font-family: "NotoMayan", sans-serif;
+			  font-size: 2em;
+			  line-height: 1.2;
+			  
+			  display: inline-flex;
+			  flex-direction: column;
+			  align-items: center;
+			  font-size: 1.5rem;
+			  margin-top: 0.25em;
+  
+			}
+			
+			// these three aren't used yet
+			.haab-entry {
+			  display: flex;
+			  align-items: center;
+			  gap: 1em;
+			}
+
+			.haab-glyph {
+			  font-size: 2rem;
+			}
+
+			.haab-info {
+			  display: flex;
+			  flex-direction: column;
+			}
+			#dreamspell {
+				font-family: 'Segoe UI', sans-serif;
+				padding: 1rem;
+				// background: #f0f0f0;
+				// border-radius: 10px;
+				max-width: 400px;
+			}
+
+			.kin-block {
+				padding: 1rem;
+				// background: white;
+				margin-bottom: 1rem;
+				// border-radius: 6px;
+				box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+			}
+
+			.kin-glyph {
+				font-size: 2rem;
+			}
+
+			.oracle-block ul {
+				list-style: none;
+				padding-left: 0;
+			}
+
+			.oracle-block li {
+				margin: 0.25rem 0;
+			}
+			.color-label {
+				font-size: 0.75em;
+				opacity: 0.6;
+				padding: 0.2em 0.5em;
+			}
+			
+			@keyframes shimmer {
+			  0% {
+				background-position: -200% 0;
+			  }
+			  100% {
+				background-position: 200% 0;
+			  }
+			}
+
+			.shimmer-bg {
+			  background: linear-gradient(
+				120deg,
+				rgba(255, 255, 255, 0.05) 0%,
+				rgba(255, 255, 255, 0.2) 50%,
+				rgba(255, 255, 255, 0.05) 100%
+			  );
+			  background-size: 200% 100%;
+			  animation: shimmer 48s linear infinite;
+			}
+			
+		/*		
+		*/
+			
+			.shimmer-checkers {
+			  background-size: 16px 16px, 16px 16px, 16px 16px, 16px 16px, 200% 100%;
+			  background-position:
+				0 0,
+				0 8px,
+				8px -8px,
+				-8px 0px,
+				-200% 0;
+			  animation: shimmer 48s linear infinite;
+			  border-radius: 8px;
+			  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
+			}
+		/*
+			.shimmer-white {
+			  background-image:
+				linear-gradient(45deg, rgba(255,255,255,0.38) 25%, transparent 25%),
+				linear-gradient(-45deg, rgba(255,255,255,0.38) 25%, transparent 25%),
+				linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.38) 75%),
+				linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.38) 75%),
+				linear-gradient(120deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.05) 100%);
+			}
+
+			.shimmer-red {
+			  background-image:
+				linear-gradient(45deg, rgba(255, 0, 0, 0.2) 25%, transparent 25%),
+				linear-gradient(-45deg, rgba(255, 0, 0, 0.2) 25%, transparent 25%),
+				linear-gradient(45deg, transparent 75%, rgba(255, 0, 0, 0.2) 75%),
+				linear-gradient(-45deg, transparent 75%, rgba(255, 0, 0, 0.2) 75%),
+				linear-gradient(120deg, rgba(255, 0, 0, 0.05) 0%, rgba(255, 0, 0, 0.25) 50%, rgba(255, 0, 0, 0.05) 100%);
+			}
+
+			.shimmer-blue {
+			  background-image:
+				linear-gradient(45deg, rgba(0, 0, 255, 0.2) 25%, transparent 25%),
+				linear-gradient(-45deg, rgba(0, 0, 255, 0.2) 25%, transparent 25%),
+				linear-gradient(45deg, transparent 75%, rgba(0, 0, 255, 0.2) 75%),
+				linear-gradient(-45deg, transparent 75%, rgba(0, 0, 255, 0.2) 75%),
+				linear-gradient(120deg, rgba(0, 0, 255, 0.05) 0%, rgba(0, 0, 255, 0.25) 50%, rgba(0, 0, 255, 0.05) 100%);
+			}
+
+			.shimmer-yellow {
+			  background-image:
+				linear-gradient(45deg, rgba(255, 255, 0, 0.18) 25%, transparent 25%),
+				linear-gradient(-45deg, rgba(255, 255, 0, 0.18) 25%, transparent 25%),
+				linear-gradient(45deg, transparent 75%, rgba(255, 255, 0, 0.18) 75%),
+				linear-gradient(-45deg, transparent 75%, rgba(255, 255, 0, 0.18) 75%),
+				linear-gradient(120deg, rgba(255, 255, 0, 0.05) 0%, rgba(255, 255, 0, 0.2) 50%, rgba(255, 255, 0, 0.05) 100%);
+			}
+			*/
+			
+			.tooltip {
+			  position: relative;
+			  cursor: help; /* a super lame question mark? */
+			   cursor: pointer; /* or default */
+			   cursor: context-menu;; /* or default */
+			}
+
+			/* Tooltip box */
+			.tooltip::after {
+			  content: attr(data-tooltip);
+			  position: absolute;
+			  bottom: 125%; /* Position above the element */
+			  left: 50%;
+			  transform: translateX(-50%);
+			  
+			  background-color: rgba(0, 0, 0, 0.8);
+			  color: white;
+			  padding: 0.5em 0.75em;
+			  border-radius: 8px; /* 👈 Rounded corners! */
+			  font-size: 0.75rem;
+			  white-space: nowrap;
+			  
+			  visibility: hidden;   //     /* S-- instead of opacity: 0 */
+			  opacity: 0;
+			  transition: opacity 0.3s ease;
+			  pointer-events: none;
+			  z-index: 10;
+			}
+
+			/* Optional tooltip arrow */
+			.tooltip::before {
+			  content: "";
+			  position: absolute;
+			  bottom: 115%;
+			  left: 50%;
+			  transform: translateX(-50%);
+			  border: 6px solid transparent;
+			  border-top-color: rgba(0, 0, 0, 0.8);
+			  opacity: 0;
+			  transition: opacity 0.3s ease;
+			}
+
+			/* Show on hover */
+			.tooltip:hover::after,
+			.tooltip:hover::before {
+			  opacity: 1;
+			}
+			.custom-tooltip {
+				position: absolute;
+				padding: 0.5em 0.75em;
+				background: rgba(255, 255, 255, 0.85);
+				border-radius: 8px;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+				font-size: 0.9rem;
+				color: #333;
+				pointer-events: none;
+				white-space: nowrap;
+				z-index: 9999;
+				transition: opacity 0.2s ease;
+				opacity: 0;
+			}
+			
+			.floating-color-emoji {
+				// background: red !important;
+				// border: 1px solid black;
+				position: absolute;
+				// position: fixed;
+				font-size: 1.5rem;
+				pointer-events: none;
+				z-index: 9999;
+				transition: transform 0.2s ease-out;
+				transform: scale(1.2);
+				// mix-blend-mode: luminosity; // turns it black-n-white for some reason
+				opacity: 0.85;
+			}
+			
+			.dreamspell::after {
+			  content: none !important;
+			  display: none !important;
+			}
+
+			.dreamspell::before {
+			  content: none !important;
+			  display: none !important;
+			}
+			
+			*::before,
+			*::after {
+			  content: none !important;
+			  display: none !important;
+			}
+			
+			.julian-prophecy {
+			  margin-top: 0.5em;
+			  font-style: italic;
+			  color: #e0e0e0;
+			  color: #555;
+			  font-size: 1em;
+			}
+
+			/* All that works, now to polish the layout */
+			/* Make #calendar-info expand to match #mayan-calendar width */
+			#calendar-info {
+			  max-width: 96% !important;
+			  // width: 100% !important;
+			  // box-sizing: border-box; /* to include padding in width */
+			  margin-left: auto !important;
+			  margin-right: auto !important;
+			}
+
+			/* Make #dreamspell fill more horizontal space inside #mayan-calendar */
+			#mayan-calendar > #dreamspell {
+			  // max-width: 100% !important;
+			  // width: 100% !important;
+			  // box-sizing: border-box;
+			  /* Optional padding adjustment for consistency */
+			  // padding-left: 1rem !important;
+			  // padding-right: 1rem !important;
+			}
+
+			/* If dreamspell is inside #mayan-calendar but with other sibling divs, 
+			   ensure all top-level children stretch equally */
+			#mayan-calendar > div {
+			  max-width: 100%;
+			  width: 100%;
+			  box-sizing: border-box;
+			}
+
+			/* Optional: add responsive behavior for smaller screens */
+			@media (max-width: 600px) {
+			  #mayan-calendar,
+			  #calendar-info {
+				max-width: 100% !important;
+				margin-left: 0 !important;
+				margin-right: 0 !important;
+				padding-left: 1rem !important;
+				padding-right: 1rem !important;
+			  }
+			}
+
+
+			/* Layout Polish Iteration 2: */
+			/* Fix #calendar-info to match #mayan-calendar layout */
+			#calendar-info {
+				max-width: 96%;
+				padding: 1rem;
+				background: rgba(255, 255, 255, 0.75); /* preserve existing style */
+				border-radius: 8px;
+				box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+				margin: 2rem auto;
+			}
+
+			/* Optional: Give both top and bottom containers a reusable class */
+			.wide-container {
+				max-width: 96%;
+				margin: 2rem auto;
+				padding: 1rem;
+				background: rgba(255, 255, 255, 0.75);
+				border-radius: 8px;
+				box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+			}
+
+
+			/* Restrict width expansion of inner blocks in #mayan-calendar */
+			#mayan-calendar > div {
+				max-width: 600px; /* Feel free to adjust this fixed width */
+				margin: 1rem auto;
+			}
+
+
+			/* Layout Fix Iteration 3: */
+			#calendar-info {
+				// max-width: 96%;
+				// padding: 1rem;
+				// background: rgba(255, 255, 255, 0.55);
+				// border-radius: 8px;
+				// box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+				// margin: 2rem auto;
+			}
+			
+			/* Tooltip "glitch" fix: */
+			body {
+			  overflow-x: hidden;
+			}
+			
+			//////////// That's it, perfection achieved - lets see what clamping is:
+			.tooltip::after {
+				  max-width: 90vw;
+				  left: 50%;
+				  transform: translateX(-50%);
+				  white-space: normal;
+				  word-break: break-word;
+				} ///////// This doesn't do anything but if it did, what it would do is limit the length of the tooltip
+		</style>
+
+		<!-- Load jQuery from CDN -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+		<!-- Time -->
+		<script src="./app/util/utils.js"></script>
+
+		<!-- Calendar orchestrator -->
+		<script type="module" src="./app/mayan-calendar-controller.js"></script>
+	</head>
+	<body>
+		<h1 style="color:white;">
+		
+		<!--<p class="mayan-numeral">&#x1D2E1;&#x1D2E5;&#x1D2EC;</p>--><!-- 1, 5, 12 --><!--<p class="mayan-numeral">&#x1D2E0;</p>  --><!--This is U+1D2E0 = MAYAN NUMERAL ZERO -->Mayan <!--<p class="mayan-numeral">0123456789</p>  -->Calendar Explorer</h1>
+
+		<div id="mayan-calendar" class="wide-container">
+			<!-- Content will be injected dynamically -->
+		</div>
+
+		<div id="calendar-info" class="wide-container info-box">
+			<h3>Loading...</h3>
+			<p>Please wait...</p>
+		</div>
+
+		<div class="tooltip-container">
+			<div id="dreamspell-tooltip" class="custom-tooltip" style="display:none;"></div>
+		</div>
+		
+		<script>
+		
+			// Modular init: use MayanCalendarController if defined
+			$(function() {
+				console.log("DOM ready. Initializing calendar...");
+				if (typeof MayanCalendarController !== "undefined") {
+					
+					console.log("Using MayanCalendarController...");
+					MayanCalendarController.init("#mayan-calendar");
+				} 
+
+			});
+			
+			// Page Info Section:
+			let currentPage = 0;
+			let pages = [];
+
+			console.log("✅ index, line 485");
+			function loadPage(n) {
+				console.log("✅ index, line 126, loadPage happening");
+				if (pages.length === 0) return;
+				const page = pages[n];
+				$("#calendar-info").html(`
+					<h3>${page.title}</h3>
+					<div style="margin-top: 1em;">
+						<button class="arrow-button" id="prev-info">⬅️</button>
+						<button class="arrow-button" id="next-info">➡️</button>
+					</div>
+					<p>${page.body}</p>
+				`);
+				currentPage = n;
+
+				$("#prev-info").on("click", () => {
+					if (currentPage > 0) loadPage(currentPage - 1);
+					else loadPage(pages.length - 1);
+				});
+				$("#next-info").on("click", () => {
+					if (currentPage < pages.length - 1) loadPage(currentPage + 1);
+					else loadPage(0);
+				});
+			}
+
+			console.log("✅ index, line 149");//yes this really is line 149
+			$.getJSON("app/resources/info.json", function(JSONdata) { //so far I've tried app/res..., /app/re... and ./app/... This is index.html app is in the directory with index.html
+				console.log("✅ index, line 151, JSON info loaded");
+				pages = JSONdata;
+				loadPage(0);
+				console.log("✔ Pages loaded, and #pages is: "+pages.length, pages);
+			}).fail(function(jqxhr, textStatus, error) {
+				console.error("❌ Failed to load JSON:", textStatus, error);//this is line 156
+			});
+						
+		</script>
+
+	</body>
+</html>
 
