@@ -250,15 +250,15 @@ export const DreamSpellUI = (function(){
 		
 		let $emoji;
 		$main.on('mouseenter', function(e) {		
-		// Remove any existing floating emoji to avoid duplicates
-		$('.floating-color-emoji').remove();
+			// Remove any existing floating emoji to avoid duplicates
+			$('.floating-color-emoji').remove();
 
-		// Create a new emoji span
-		$emoji = $('<span class="floating-color-emoji" style="width:100px;height:100px;color:red;">'+emoji_text+'</span>')
-			// .text(data.colorGlyph)
-			.appendTo('body');
-			
-		console.log("🌀 Emoji appended", $emoji.get(0));
+			// Create a new emoji span
+			$emoji = $('<span class="floating-color-emoji" style="width:100px;height:100px;color:red;">'+emoji_text+'</span>')
+				// .text(data.colorGlyph)
+				.appendTo('body');
+				
+			// console.log("🌀 Emoji appended", $emoji.get(0));
 		});
 		
 		// Position it near the hovered element
