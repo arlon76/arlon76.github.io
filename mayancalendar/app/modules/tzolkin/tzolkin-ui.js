@@ -10,7 +10,7 @@ export const TzolkinUI = (function() {
 		
 		function init(containerSelector) {
 			
-			console.log("🔁 TzolkinUI.init() fired, line 6 TzolkinUI, containerSelector is:"+containerSelector);
+			// console.log("🔁 TzolkinUI.init() fired, line 6 TzolkinUI, containerSelector is:"+containerSelector);
 			
 			$container = $(containerSelector);
 			if (!$container.length) {

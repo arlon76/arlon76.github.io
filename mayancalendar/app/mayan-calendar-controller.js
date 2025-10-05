@@ -1,6 +1,6 @@
 // mayan-calendar.js
 
-console.log("✅ mayan-calendar-controller.js loaded, line 12 of the controller");
+// console.log("✅ mayan-calendar-controller.js loaded, line 12 of the controller");
 
 	// UI plugins (rendering)
 // import { TzolkinUI } from '/app/modules/tzolkin/tzolkin-ui.js'; // line 12
