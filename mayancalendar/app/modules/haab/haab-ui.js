@@ -33,7 +33,7 @@ export const HaabUI = (function() {
 		const now = date;
 		const { dayNumber, monthName, glyph } = Haab.getHaab(now);
 		
-		console.log(`Haab → ${glyph} ${dayNumber} ${monthName}`);
+		// console.log(`Haab → ${glyph} ${dayNumber} ${monthName}`);
 		// Add to the container — create or update UI elements
 		let $haabDiv = $container.find(".haab");
 		if (!$haabDiv.length) {
