@@ -35,6 +35,37 @@ export const CalendarNavigation = (function () {
 
 		updateAll();
 		updateFloatingNavPosition();
+		
+		function disappearNavAtBottom(){
+	
+		  const nav = document.querySelector('.floating-nav-wrapper');
+		  const calendar = document.getElementById('mayan-calendar');
+
+		  // Set up an IntersectionObserver to monitor the visibility of #mayan-calendar
+		  
+		  let threshold=0.05;
+		  const observer = new IntersectionObserver(
+			(entries) => {
+			  const entry = entries[0];
+			  if (entry.intersectionRatio < threshold) {
+				// Less than 10% visible — fade nav out
+				nav.classList.add('hidden');
+			  } else {
+				// At least 10% visible — show nav
+				nav.classList.remove('hidden');
+			  }
+			},
+			{
+			  threshold: [threshold], // triggers when 10% of the element is visible or not
+			}
+		  );
+
+		  observer.observe(calendar);
+  
+		}
+		
+		disappearNavAtBottom();
+		
 	}
 
 	function shiftDate(days) {
@@ -80,8 +111,8 @@ export const CalendarNavigation = (function () {
 		let bottomOffset;
 		let topOffset;
 
-		// if ((pageHeight - scrollPosition) < (footerHeight + buffer)) { // bottom
-			if (window.scrollY <= maxOffset) {
+		// if ((pageHeight - scrollPosition) < (footerHeight + buffer)) { // for bottom stickyness
+			if (window.scrollY <= maxOffset) { // for top stickyness
 			// Near the bottom – avoid covering the footer
 			// nav.classList.add('floating-nav--shifted');
 
@@ -106,7 +137,8 @@ export const CalendarNavigation = (function () {
 		nav.style.top = `${topOffset}px`;
 		nav.style.bottom = 'auto';
 	}
-			
+
+
 	return {
 		init
 		,updateFloatingNavPosition

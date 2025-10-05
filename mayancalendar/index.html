@@ -558,6 +558,17 @@
 				  z-index: 1000; /* Make sure it's above footer content */
 				}
 
+				
+				/* hide nav buttons at the bottom for the page info */
+				.floating-nav-wrapper {
+				  transition: opacity 0.3s ease;
+				}
+
+				.floating-nav-wrapper.hidden {
+				  opacity: 0;
+				  pointer-events: none;
+				}
+
 		</style>
 
 		<!-- Load jQuery from CDN -->
