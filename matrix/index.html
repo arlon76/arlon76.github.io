@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Matrix Rain</title>
+  <style>
+    html, body {
+      margin: 0;
+      overflow: hidden;
+      background: black;
+    }
+    canvas {
+      display: block;
+      font-family: 'MatrixCode', monospace;
+    }
+
+    @font-face {
+      font-family: 'MatrixCode';
+      src: url('./matrix-code-nfi.ttf') format('truetype');
+    }
+  </style>
+</head>
+<body>
+<canvas id="matrixCanvas"></canvas>
+<script>
+  const canvas = document.getElementById('matrixCanvas');
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const fontSize = 18;
+  const columns = Math.floor(canvas.width / fontSize);
+
+  const drops = Array(columns).fill(1);
+
+  const charStart = 0x30A0;
+  const charEnd = 0x30FF;
+
+  function draw() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#0F0';
+    ctx.font = fontSize + 'px MatrixCode';
+
+    for (let i = 0; i < drops.length; i++) {
+      const charCode = charStart + Math.floor(Math.random() * (charEnd - charStart));
+      const char = String.fromCharCode(charCode);
+
+      ctx.fillStyle = '#FFF';
+      ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+
+      ctx.fillStyle = '#0F0';
+      ctx.fillText(char, i * fontSize, (drops[i] - 1) * fontSize);
+
+      if (Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+
+      drops[i]++;
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+</script>
+</body>
+</html>

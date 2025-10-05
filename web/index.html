@@ -30,6 +30,25 @@
     .breadcrumb a:hover {
       text-decoration: underline;
     }
+	
+	.cool-link {
+		color: #888;                /* smooth grey */
+		text-decoration: none;     /* no underline */
+		transition: color 0.3s ease; /* smooth transitions */
+	}
+
+	.cool-link:hover {
+		color: orange;             /* highlight on hover */
+	}
+
+	.cool-link:active {
+		color: hotpink;            /* bright pink on mouse-down */
+	}
+
+	.cool-link:visited {
+		color: #555;               /* darker grey if visited */
+	}
+		
   </style>
 </head>
 <body>
@@ -41,7 +60,8 @@
     <a href="/">← Back to Programs</a>
   </div>
   
-    <br><a href="/mayancalendar">Mayan Calendar Explorer</a>
-    <br><a href="/launchblaster">Launch Blaster</a>
+    <br><a class="cool-link" href="/mayancalendar">Mayan Calendar Explorer</a>
+    <br><a class="cool-link" href="/launchblaster">Launch Blaster</a>
+    <br><a class="cool-link" href="/matrix">Matrix</a>
 </body>
 </html>
