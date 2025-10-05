@@ -77,7 +77,7 @@ export const MayanCalendarController = (function() {
 		for (const [name, ui] of Object.entries(uiModules)) {
 			// if (ui && typeof ui !== "undefined" && typeof ui.init === "function") {
 			if (ui && typeof ui.init === "function") {
-				console.log(`→ Initializing ${name}`);
+				// console.log(`→ Initializing ${name}, line 80 of the controller`);
 				ui.init(containerSelector);
 				allUIs.push(ui);
 			}
