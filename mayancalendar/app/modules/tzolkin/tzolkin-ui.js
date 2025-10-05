@@ -38,7 +38,7 @@ export const TzolkinUI = (function() {
 		}
 		function update(date=new Date()) {
 			
-			console.log("TzolkinUI.update() fired, line 33 TzolkinUI, date is:"+date);
+			// console.log("TzolkinUI.update() fired, line 33 TzolkinUI, date is:"+date);
 			
 			const now = date;
 			const { toneNumber: tone, dayName, glyph } = Tzolkin.getTzolkin(date);

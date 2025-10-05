@@ -469,10 +469,10 @@
 		
 			// Modular init: use MayanCalendarController if defined
 			$(function() {
-				console.log("DOM ready. Initializing calendar...");
+				// console.log("DOM ready. Initializing calendar...");
 				if (typeof MayanCalendarController !== "undefined") {
 					
-					console.log("Using MayanCalendarController...");
+					// console.log("Using MayanCalendarController...");
 					MayanCalendarController.init("#mayan-calendar");
 				} 
 
@@ -482,9 +482,9 @@
 			let currentPage = 0;
 			let pages = [];
 
-			console.log("✅ index, line 485");
+			// console.log("✅ index, line 485");
 			function loadPage(n) {
-				console.log("✅ index, line 126, loadPage happening");
+				// console.log("✅ index, line 487, loadPage happening");
 				if (pages.length === 0) return;
 				const page = pages[n];
 				$("#calendar-info").html(`
@@ -507,12 +507,12 @@
 				});
 			}
 
-			console.log("✅ index, line 149");//yes this really is line 149
+			console.log("✅ index, line 510");
 			$.getJSON("app/resources/info.json", function(JSONdata) { //so far I've tried app/res..., /app/re... and ./app/... This is index.html app is in the directory with index.html
-				console.log("✅ index, line 151, JSON info loaded");
+				console.log("✅ index, line 512, JSON info loaded");
 				pages = JSONdata;
 				loadPage(0);
-				console.log("✔ Pages loaded, and #pages is: "+pages.length, pages);
+				// console.log("✔ index, line 515,  Pages loaded, and #pages is: "+pages.length, pages);
 			}).fail(function(jqxhr, textStatus, error) {
 				console.error("❌ Failed to load JSON:", textStatus, error);//this is line 156
 			});
@@ -520,24 +520,33 @@
 		</script>
 		<div id="credits" class="wide-container info-box">
 			<p style="text-align: center; font-size: 0.9rem; color: #666;">
-			  <style type="text/css">	
-				  .cool-link {
+			  <style type="text/css">
+				#credits {
+					text-align: center;
+					font-size: 0.9rem;
+					color: #555;
+				}
+				#credits img {
+					vertical-align: middle;
+				}
+				
+				.cool-link {
 					color: #888;                /* smooth grey */
 					text-decoration: none;     /* no underline */
 					transition: color 0.3s ease; /* smooth transitions */
-				  }
+				}
 
-				  .cool-link:hover {
+				.cool-link:hover {
 					color: orange;             /* highlight on hover */
-				  }
+				}
 
-				  .cool-link:active {
+				.cool-link:active {
 					color: hotpink;            /* bright pink on mouse-down */
-				  }
+				}
 
-				  .cool-link:visited {
+				.cool-link:visited {
 					color: #555;               /* darker grey if visited */
-				  }
+				}
 			</style>
 			<br><a class="cool-link" href="/launchblaster">Launch Blaster</a> • <a class="cool-link" href="/">More</a>
 			

@@ -29,7 +29,7 @@ export const HaabUI = (function() {
 	}
 		
 	function update(date = new Date()) {
-		console.log("HaabUI.update() fired");
+		// console.log("HaabUI.update() fired");
 		const now = date;
 		const { dayNumber, monthName, glyph } = Haab.getHaab(now);
 		
