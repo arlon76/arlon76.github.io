@@ -63,7 +63,8 @@ export const CalendarNavigation = (function () {
 		// const headerHeight = 26; // amount of space you'd want to clear (e.g. site banner)
 		// const headerHeight = 326; // amount of space you'd want to clear (e.g. site banner)
 		// const headerHeight = 342; // amount of space you'd want to clear (e.g. site banner)
-		const headerHeight = 393; // amount of space you'd want to clear (e.g. site banner)
+		// const headerHeight = 393; // amount of space you'd want to clear (e.g. site banner)
+		const headerHeight = 345; // amount of space you'd want to clear (e.g. site banner)
 		const buffer = 40; // Additional padding to avoid overlap
 		const startOffset = 32; // normal floating position in px
 		
