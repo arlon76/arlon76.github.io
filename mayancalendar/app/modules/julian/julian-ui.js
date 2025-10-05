@@ -30,7 +30,7 @@ export const JulianUI = (function () {
   }
 
   function buildHtml(data) {
-	  console.log("line 32 julian-ui.js echoing: Found prophecy element?", data.emojiData.prophecy);
+	  // console.log("line 33 julian-ui.js echoing: Found prophecy element?", data.emojiData.prophecy);
     return tag.div([
       tag.h3("Julian Calendar"),
       tag.div(["Date: ", tag.span(data.formattedDate, { 'data-field': 'date' })].join('')),

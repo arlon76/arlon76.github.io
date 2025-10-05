@@ -49,7 +49,7 @@ export const Haab = (function() {
 		date = stripTime(date); // <== Important!
 		const offset = daysSinceEpoch(date);
 		const haabDayNumber = (epochMonthIndex * 20 + epochDay + offset) % 365;
-		console.log('Line 49 of haab-core.js says haabDayNumber is:'+haabDayNumber)
+		// console.log('Line 52 of haab-core.js says haabDayNumber is:'+haabDayNumber)
 		if (haabDayNumber >= 360) {
 			// Wayeb'
 			return {
