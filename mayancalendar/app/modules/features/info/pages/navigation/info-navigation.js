@@ -1,125 +1,174 @@
 // info-navigation.js
+
 export const InfoNavigation = (function () {
-	let $container;
-
-	// console.log("✅ InfoNavigation loaded, line 6 of info-navigation.js");
-	function init(containerSelector) {
-
-		// console.log("✅ InfoNavigation init() happening, line 9 of info-navigation.js");
-		$container = $(containerSelector);
-
-		if ($container.find(".calendar-nav").length === 0) {
-			const navHtml = `
-				<div class="floating-nav-wrapper">
-					<div class="calendar-nav-fixed floating-nav">
-						<button class="prev-day">⬅️</button>
-						<button class="today">💫</button>
-						<button class="next-day">➡️</button>
-					</div>
-				</div>
-			`;
-			$container.append(navHtml);
-		}
-
-		$container.find(".prev-day").on("click", () => shiftDate(-1));
-		$container.find(".today").on("click", () => setDate(new Date()));
-		$container.find(".next-day").on("click", () => shiftDate(1));
-
-		updateAll();
-		updateFloatingNavPosition();
-		
-		
-		function disappearNavAtTop(){
-	
-		  const nav = document.querySelector('.floating-nav-wrapper');
-		  const calendar = document.getElementById('mayan-calendar');
-
-		  // Set up an IntersectionObserver to monitor the visibility of #mayan-calendar
-		  
-		  let threshold=0.05;
-		  const observer = new IntersectionObserver(
-			(entries) => {
-			  const entry = entries[0];
-			  if (entry.intersectionRatio < threshold) {
-				// Less than 10% visible — fade nav out
-				nav.classList.add('hidden');
-			  } else {
-				// At least 10% visible — show nav
-				nav.classList.remove('hidden');
-			  }
-			},
-			{
-			  threshold: [threshold], // triggers when 10% of the element is visible or not
+	let observer;
+	let $navContainer;
+	function injectStyles() {
+		const style = document.createElement('style');
+		style.textContent = `
+			#info-nav-buttons {
+				position: fixed;
+				bottom: 2rem;
+				right: 2rem;
+				display: none;
+				z-index: 1000;
 			}
-		  );
 
-		  observer.observe(calendar);
-  
-		}
-		
-		disappearNavAtTop();
-		
+			#info-nav-buttons .arrow-button {
+				font-size: 1.5rem;
+				padding: 0.5rem 1rem;
+				margin: 0 0.25rem;
+				cursor: pointer;
+				background: #f0f0f0;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+				transition: background 0.2s ease;
+			}
+
+			#info-nav-buttons .arrow-button:hover {
+				background: #e0e0e0;
+			}
+		`;
+		document.head.appendChild(style);
+	}
+	
+	function createNavButtons1(onPrev, onNext) {
+		$navContainer = $('<div id="info-nav-buttons" style="position: fixed; bottom: 1.5em; right: 1.5em; z-index: 1000; display: none;">' +
+			'<button id="floating-prev-info" class="arrow-button">⬅️</button>' +
+			'<button id="floating-next-info" class="arrow-button">➡️</button>' +
+		'</div>');
+
+		$("body").append($navContainer);
+
+		$("#floating-prev-info").on("click", onPrev);
+		$("#floating-next-info").on("click", onNext);
+	}
+	function createNavButtons(onPrev, onNext) {
+		$navContainer = document.createElement("div");
+		$navContainer.id = "info-nav-buttons";
+
+		const prevBtn = document.createElement("button");
+		prevBtn.className = "arrow-button";
+		prevBtn.textContent = "⬅️";
+		prevBtn.addEventListener("click", () => {
+			// window.dispatchEvent(new CustomEvent("info-nav-prev"));
+			onPrev();
+		});
+
+		const nextBtn = document.createElement("button");
+		nextBtn.className = "arrow-button";
+		nextBtn.textContent = "➡️";
+		nextBtn.addEventListener("click", () => {
+			// window.dispatchEvent(new CustomEvent("info-nav-next"));
+			onNext();
+		});
+
+		$navContainer.appendChild(prevBtn);
+		$navContainer.appendChild(nextBtn);
+		document.body.appendChild($navContainer);
 	}
 
-	function updateFloatingNavPosition() {
+	function observeVisibility(targetSelector) {
 		
-		const nav = document.querySelector('.floating-nav');
-		if (!nav) return;
+		const target = document.querySelector(targetSelector);
 		
-		const footerHeight = 310; // Height of the footer or bottom banner
-		// const headerHeight = 100; // amount of space you'd want to clear (e.g. site banner)
-		// const headerHeight = 26; // amount of space you'd want to clear (e.g. site banner)
-		// const headerHeight = 326; // amount of space you'd want to clear (e.g. site banner)
-		// const headerHeight = 342; // amount of space you'd want to clear (e.g. site banner)
-		// const headerHeight = 393; // amount of space you'd want to clear (e.g. site banner)
-		// const headerHeight = 345; // amount of space you'd want to clear (e.g. site banner)
-		const headerHeight = 100; // amount of space you'd want to clear (e.g. site banner)
-		const buffer = 40; // Additional padding to avoid overlap
-		const startOffset = 32; // normal floating position in px
+		console.log("📌 Line 23 info-navigation.js Observing visibility of:", target);
 		
-		const viewportHeight = window.innerHeight;
-		const scrollPosition = window.scrollY + window.innerHeight;
-		const pageHeight = document.body.scrollHeight;
+		if (!target) {
+			console.warn("InfoNavigation: target not found for visibility observer:", targetSelector);
+			return;
+		}
 
-		const distanceFromBottom = pageHeight - (window.scrollY + viewportHeight);
+		observer = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting && entry.intersectionRatio > 0.3) {
+					console.log("📌 Line 33 info-navigation.js fading in");
+					$navContainer.fadeIn();
+					console.log("📌 Line 35 info-navigation.js faded in");
+				} else {
+					console.log("📌 Line 37 info-navigation.js fading out");
+					$navContainer.fadeOut();
+					console.log("📌 Line 39 info-navigation.js faded out");
+				}
+			});
+		}, {
+			root: null,
+			threshold: [0.3] // Show only if ~30% of #calendar-info is visible
+		});
 
-		const maxOffset = footerHeight + buffer;
+		observer.observe(target);
+	}
 
-		let bottomOffset;
-		let topOffset;
+	function init(targetSelector, onPrev, onNext) {
+		console.log("📌 InfoNavigation.init Line 47 info-navigation.js targetSelector:", targetSelector);
+		const target = document.querySelector(targetSelector);
+		if (!target) {
+			console.warn(`❌ InfoNavigation: Target element ${containerSelector} not found.`);
+			return;
+		}
+		injectStyles();
+		createNavButtons(onPrev, onNext);
+		// observeVisibility(targetSelector);
+		monitorViewportCoverage(
+			target,
+			() => $navContainer.style.display = "block",
+			() => $navContainer.style.display = "none",
+			0.7 // ← means: show when calendar-info covers at least 70% of the viewport
+			,200    // lift nav when within 200px of bottom
+		);
+	}
 
-		// if ((pageHeight - scrollPosition) < (footerHeight + buffer)) { // for bottom stickyness
-			if (window.scrollY <= maxOffset) { // for top stickyness
-			// Near the bottom – avoid covering the footer
-			// nav.classList.add('floating-nav--shifted');
+	function destroy() {
+		if (observer) observer.disconnect();
+		if ($navContainer) $navContainer.remove();
+	}
 
-			// We're nearing the bottom: start lifting the nav up
-			const ratio = distanceFromBottom / maxOffset;
-			bottomOffset = startOffset + (1 - ratio) * (footerHeight); // smoothly increase bottom offset
+	function monitorViewportCoverage(targetElement, onShow, onHide, threshold = 0.7, liftDistance = 200) {
+		function checkVisibility() {
+			const rect = targetElement.getBoundingClientRect();
+			const viewportHeight = window.innerHeight;
 
-			// Still near top of page, start lifting nav up toward header
-			const topRatio = window.scrollY / maxOffset;
-			topOffset = startOffset + (1 - topRatio) * headerHeight;
+			// Clamp top and bottom to viewport
+			const visibleTop = Math.max(rect.top, 0);
+			const visibleBottom = Math.min(rect.bottom, viewportHeight);
 
-		} else {
-			// Safe to float
-			// nav.classList.remove('floating-nav--shifted');
+			const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+			const percentOfViewport = visibleHeight / viewportHeight;
+
+			// Debug (optional)
+			// console.log(`Visible: ${Math.round(percentOfViewport * 100)}% of viewport`);
+
+			if (percentOfViewport >= threshold) {
+				onShow();
+			} else {
+				onHide();
+			}
 			
-			// Plenty of room: keep it at default position
-			bottomOffset = startOffset;
-			topOffset = startOffset;
+			// Scroll position from bottom logic
+			const scrollTop = window.scrollY || window.pageYOffset;
+			const scrollHeight = document.documentElement.scrollHeight;
+			const clientHeight = document.documentElement.clientHeight;
+			const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
+
+			if (distanceFromBottom < liftDistance) {
+				$navContainer.style.bottom = `${liftDistance - distanceFromBottom + 16}px`; // lift upward
+			} else {
+				$navContainer.style.bottom = `2rem`; // default
+			}
+		
 		}
-		
-		// nav.style.bottom = `${bottomOffset}px`;
-		nav.style.top = `${topOffset}px`;
-		nav.style.bottom = 'auto';
-		
+
+		// Listen to scroll and resize
+		window.addEventListener("scroll", checkVisibility, { passive: true });
+		window.addEventListener("resize", checkVisibility);
+
+		// Initial check
+		checkVisibility();
 	}
+
 
 	return {
-		init
-		,updateFloatingNavPosition
+		init,
+		destroy
 	};
-	
 })();
-

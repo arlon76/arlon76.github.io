@@ -1,5 +1,5 @@
 // info-pages.js
-// import { InfoNavigation } from './navigation/info-navigation.js';
+import { InfoNavigation } from './navigation/info-navigation.js';
 export const InfoPages = (function () {
 	
 	let $container;
@@ -23,10 +23,24 @@ export const InfoPages = (function () {
 			pages = JSONdata;
 			loadPage(0);
 			// console.log("✔ index, line 515,  Pages loaded, and #pages is: "+pages.length, pages);
+			
+			// Init floating nav
+			console.log("✅ index, line 28, containerSelector: "+containerSelector);
+			InfoNavigation.init(containerSelector, goPrev, goNext);
+				
 		}).fail(function(jqxhr, textStatus, error) {
 			console.error("❌ Failed to load JSON:", textStatus, error); // this is line 156
 		});
 
+	}
+	function goPrev() {
+		const prev = (currentPage - 1 + pages.length) % pages.length;
+		loadPage(prev);
+	}
+
+	function goNext() {
+		const next = (currentPage + 1) % pages.length;
+		loadPage(next);
 	}
 
 	// console.log("✅ index, line 485");
@@ -46,14 +60,17 @@ export const InfoPages = (function () {
 		`);
 		currentPage = n;
 
-		$("#prev-info").on("click", () => {
-			if (currentPage > 0) loadPage(currentPage - 1);
-			else loadPage(pages.length - 1);
-		});
-		$("#next-info").on("click", () => {
-			if (currentPage < pages.length - 1) loadPage(currentPage + 1);
-			else loadPage(0);
-		});
+		// $("#prev-info").on("click", () => {
+			// if (currentPage > 0) loadPage(currentPage - 1);
+			// else loadPage(pages.length - 1);
+		// });
+		// $("#next-info").on("click", () => {
+			// if (currentPage < pages.length - 1) loadPage(currentPage + 1);
+			// else loadPage(0);
+		// });
+				// Inline buttons
+		$container.find("#prev-info").on("click", goPrev);
+		$container.find("#next-info").on("click", goNext);
 	}
 	
 	return {
