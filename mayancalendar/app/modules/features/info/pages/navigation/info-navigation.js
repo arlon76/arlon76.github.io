@@ -70,11 +70,11 @@ export const InfoNavigation = (function () {
 		document.body.appendChild($navContainer);
 	}
 
-	function observeVisibility(targetSelector) {
+	function observeVisibility(targetSelector) { // unused, replaced with monitorViewportCoverage
 		
 		const target = document.querySelector(targetSelector);
 		
-		console.log("📌 Line 23 info-navigation.js Observing visibility of:", target);
+		// console.log("📌 Line 23 info-navigation.js Observing visibility of:", target);
 		
 		if (!target) {
 			console.warn("InfoNavigation: target not found for visibility observer:", targetSelector);
@@ -84,13 +84,13 @@ export const InfoNavigation = (function () {
 		observer = new IntersectionObserver((entries) => {
 			entries.forEach(entry => {
 				if (entry.isIntersecting && entry.intersectionRatio > 0.3) {
-					console.log("📌 Line 33 info-navigation.js fading in");
+					// console.log("📌 Line 87 info-navigation.js fading in");
 					$navContainer.fadeIn();
-					console.log("📌 Line 35 info-navigation.js faded in");
+					// console.log("📌 Line 89 info-navigation.js faded in");
 				} else {
-					console.log("📌 Line 37 info-navigation.js fading out");
+					// console.log("📌 Line 91 info-navigation.js fading out");
 					$navContainer.fadeOut();
-					console.log("📌 Line 39 info-navigation.js faded out");
+					// console.log("📌 Line 93 info-navigation.js faded out");
 				}
 			});
 		}, {
@@ -108,9 +108,11 @@ export const InfoNavigation = (function () {
 			console.warn(`❌ InfoNavigation: Target element ${containerSelector} not found.`);
 			return;
 		}
+		
 		injectStyles();
 		createNavButtons(onPrev, onNext);
-		// observeVisibility(targetSelector);
+		
+		// observeVisibility(targetSelector); // replaced with the following:
 		monitorViewportCoverage(
 			target,
 			() => $navContainer.style.display = "block",
@@ -168,9 +170,9 @@ export const InfoNavigation = (function () {
 		checkVisibility();
 	}
 
-
 	return {
 		init,
 		destroy
 	};
+	
 })();
