@@ -1,0 +1,57 @@
+📅 Mayan Calendar Web Plugin
+
+This is a modular, client-side JavaScript plugin for visualizing Mayan calendar systems — including Tzolk’in, Haab’, and soon the Long Count and Dreamspell.
+
+The project is organized by logical and UI layers, allowing clean separation of concerns. It renders the current Mayan date (as of today or user-controlled navigation) and updates itself dynamically.
+
+Tzolk’in: Sacred 260-day cycle (13 tones × 20 day signs)
+
+Haab’: 365-day solar calendar (18 months + 5 Wayeb’ days)
+
+Navigation: View past/future dates with Prev / Today / Next
+
+Glyphs: Emoji-style representations of Mayan glyphs for clarity and vibe
+
+
+
+
+# 🌞 Mayan Calendar Plugin
+
+This JavaScript web tool implements several components of the ancient Mesoamerican calendar system using modular, self-contained plugins.
+
+## 🔍 Features
+
+- **Tzolk’in Calendar** (260-day sacred calendar)
+- **Haab’ Calendar** (365-day solar calendar)
+- **Emoji Glyphs** for each day sign
+- **Daily Auto Update** at midnight
+- **Navigation Buttons** (prev, next, today)
+- **Modular Design** (separate core + UI files)
+- **Expandable** with Long Count, Dreamspell, and Gregorian support
+
+## 🔧 Architecture
+
+| Component | Description |
+|----------|-------------|
+| `tzolkin-core.js` | Computes tone number and day sign for a given date |
+| `tzolkin-ui.js` | Renders Tzolk’in values to the page |
+| `haab-core.js` | Computes solar calendar day/month |
+| `haab-ui.js` | Renders Haab’ values |
+| `mayan-calendar-ui.js` | Orchestrates Tzolkin/Haab updates |
+| `calendar-navigation.js` | Adds date navigation buttons |
+| `calendar-info.json` | Multi-page explainer for users |
+| `themes.json` *(coming soon)* | UI theming options |
+
+## 📅 Features
+
+- ✅ Long Count plugin
+- ✅ Color theming (dark mode, night mode, etc.)
+- ✅ Dreamspell calendar
+- ✅ Gregorian calendar integration
+- ✅ Month and Year overviews
+- ✅ Background image (SVG or PNG) of Mayan glyph wheel
+
+## 📂 Live Demo
+[Run locally with Python](#) or place on any static web server.
+python3 -m http.server 4000 --bind 0.0.0.0
+

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mayan Numeral Converter</title>
+  <style>
+    @font-face {
+      font-family: "NotoMayan";
+      src: url("app/resources/font/NotoSansMayanNumerals-v2.001/NotoSansMayanNumerals/unhinted/ttf/NotoSansMayanNumerals-Regular.ttf")
+           format("truetype");
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    body {
+      font-family: sans-serif;
+      padding: 2em;
+    }
+
+    .mayan-output {
+      font-family: "NotoMayan", sans-serif;
+      font-size: 3em;
+      line-height: 1.2;
+      display: inline-block;
+      border: 1px solid #ccc;
+      padding: 1em;
+    }
+
+    .digit {
+      display: block;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Mayan Numeral Converter</h1>
+
+  <label for="numberInput">Enter a decimal number:</label>
+  <input type="number" id="numberInput" min="0" step="1" value="143">
+  <button onclick="convertToMayan()">Convert</button>
+
+  <h2>Mayan Numerals</h2>
+  <div id="mayanResult" class="mayan-output"></div>
+
+  <script>
+    // Map base-20 digits (0–19) to Unicode Mayan numeral codepoints U+1D2E0 to U+1D2F3
+    function getMayanChar(digit) {
+      const codePoint = 0x1D2E0 + digit;
+      return String.fromCodePoint(codePoint);
+    }
+
+    function convertToMayan() {
+      const input = document.getElementById("numberInput").value;
+      let num = parseInt(input, 10);
+
+      if (isNaN(num) || num < 0) {
+        alert("Please enter a valid non-negative integer.");
+        return;
+      }
+
+      const levels = [];
+
+      do {
+        const digit = num % 20;
+        levels.unshift(getMayanChar(digit)); // Mayans stack top-to-bottom
+        num = Math.floor(num / 20);
+      } while (num > 0);
+
+      const resultDiv = document.getElementById("mayanResult");
+      resultDiv.innerHTML = levels.map(char => `<span class="digit">${char}</span>`).join('');
+    }
+
+    // Auto-convert on load for default value
+    window.onload = convertToMayan;
+  </script>
+</body>
+</html>
