@@ -25,7 +25,7 @@ export const InfoPages = (function () {
 			// console.log("✔ index, line 515,  Pages loaded, and #pages is: "+pages.length, pages);
 			
 			// Init floating nav
-			console.log("✅ index, line 28, containerSelector: "+containerSelector);
+			// console.log("✅ index, line 28, containerSelector: "+containerSelector);
 			InfoNavigation.init(containerSelector, goPrev, goNext);
 				
 		}).fail(function(jqxhr, textStatus, error) {

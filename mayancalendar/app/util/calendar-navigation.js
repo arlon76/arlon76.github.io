@@ -66,6 +66,9 @@ export const CalendarNavigation = (function () {
 		
 		disappearNavAtBottom();
 		
+		window.addEventListener('scroll', updateFloatingNavPosition);
+		window.addEventListener('resize', updateFloatingNavPosition);
+
 	}
 
 	function shiftDate(days) {
@@ -146,8 +149,8 @@ export const CalendarNavigation = (function () {
 	
 })();
 
-
-document.addEventListener('DOMContentLoaded', () => {
+/*
+if(false)document.addEventListener('DOMContentLoaded', () => {		//		Replaced the need for this with the next two lines called above in init()
 	window.addEventListener('scroll', MayanCalendarController.CalendarNavigation.updateFloatingNavPosition);
 	window.addEventListener('resize', MayanCalendarController.CalendarNavigation.updateFloatingNavPosition);
 	
@@ -156,3 +159,4 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Initial position update
 	// MayanCalendarController.CalendarNavigation.updateFloatingNavPosition();
 });
+*/

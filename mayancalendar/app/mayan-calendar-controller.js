@@ -116,5 +116,5 @@ export const MayanCalendarController = (function() {
 	return { init, CalendarNavigation };
 })();
 
-window.MayanCalendarController = MayanCalendarController;
+// window.MayanCalendarController = MayanCalendarController; // replaced the need for this line
 

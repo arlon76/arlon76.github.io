@@ -102,7 +102,7 @@ export const InfoNavigation = (function () {
 	}
 
 	function init(targetSelector, onPrev, onNext) {
-		console.log("📌 InfoNavigation.init Line 47 info-navigation.js targetSelector:", targetSelector);
+		// console.log("📌 InfoNavigation.init Line 47 info-navigation.js targetSelector:", targetSelector);
 		const target = document.querySelector(targetSelector);
 		if (!target) {
 			console.warn(`❌ InfoNavigation: Target element ${containerSelector} not found.`);

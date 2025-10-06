@@ -577,8 +577,8 @@
 		<!-- Time -->
 		<script src="./app/util/utils.js"></script>
 
-		<!-- Calendar orchestrator -->
-		<script type="module" src="./app/mayan-calendar-controller.js"></script>
+		<!-- Calendar orchestrator --><!-- Replaced with main.js, called below -->
+		<!-- <script type="module" src="./app/mayan-calendar-controller.js"></script> -->
 		
 	</head>
 	<body>
@@ -599,25 +599,9 @@
 			<div id="dreamspell-tooltip" class="custom-tooltip" style="display:none;"></div>
 		</div>
 		
-		<script>
-		
-			// Modular init: use MayanCalendarController if defined
-			$(function() {
-				// console.log("DOM ready. Initializing calendar...");
-				if (typeof MayanCalendarController !== "undefined") {
-					
-					// console.log("Using MayanCalendarController...");
-					MayanCalendarController.init("#mayan-calendar");
-				} 
-
-			});
-									
-		</script>
-		
 		<div id="credits" class="wide-container info-box">
 			<p style="text-align: center; font-size: 0.9rem; color: #666;">
-			<br><a class="cool-link" href="/launchblaster">Launch Blaster</a> • <a class="cool-link" href="/">More</a>
-			
+				<br><a class="cool-link" href="/launchblaster">Launch Blaster</a> • <a class="cool-link" href="/">More</a>
 			</p>
 			<p style="text-align: center; font-size: 0.9rem; color: #666;">
 				<a href="http://santacruzwebfactory.com"
@@ -630,6 +614,10 @@
 				</a>
 			</p>
 		</div>
+		
+		<!-- initialize everything: -->
+		<script type="module" src="./app/main.js"></script>
+		
 	</body>
 </html>
 
