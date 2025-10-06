@@ -19,6 +19,7 @@ import { JulianUI } from './modules/julian/julian-ui.js';
 //next/prev/today buttons
 // import { CalendarNavigation } from '/app/util/calendar-navigation.js';
 import { CalendarNavigation } from './util/calendar-navigation.js';
+import { InfoPages } from './modules/features/info/pages/info-pages.js';
 
 export const MayanCalendarController = (function() {
 	
@@ -73,20 +74,35 @@ export const MayanCalendarController = (function() {
 			,JulianUI
 		};
 
-		// for (const ui of uiModules) { // when it was an array
-		for (const [name, ui] of Object.entries(uiModules)) {
-			// if (ui && typeof ui !== "undefined" && typeof ui.init === "function") {
-			if (ui && typeof ui.init === "function") {
-				// console.log(`→ Initializing ${name}, line 80 of the controller`);
-				ui.init(containerSelector);
-				allUIs.push(ui);
+		function loadModules(modulesObjectGroup,more){
+			// for (const ui of uiModules) { // when it was an array
+			for (const [name, ui] of Object.entries(modulesObjectGroup)) {
+				// if (ui && typeof ui !== "undefined" && typeof ui.init === "function") {
+				if (ui && typeof ui.init === "function") {
+					// console.log(`→ Initializing ${name}, line 80 of the controller`);
+					// ui.init(containerSelector);
+					// allUIs.push(ui);
+					more(ui);
+				}
 			}
 		}
-
+		loadModules(uiModules,(ui)=>{
+			ui.init(containerSelector);
+			allUIs.push(ui);
+		});
+		
 		// Initialize CalendarNavigation if it exists
 		if (typeof CalendarNavigation !== "undefined") {
 			CalendarNavigation.init(containerSelector, allUIs);
 		}
+		
+		const moreModules = {
+			InfoPages
+		};
+		
+		loadModules(moreModules,(ui)=>{
+			ui.init();
+		});
 
 		scheduleDailyUpdate(() => {
 			for (const ui of allUIs) {

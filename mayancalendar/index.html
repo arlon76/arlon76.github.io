@@ -579,6 +579,7 @@
 
 		<!-- Calendar orchestrator -->
 		<script type="module" src="./app/mayan-calendar-controller.js"></script>
+		
 	</head>
 	<body>
 		<h1 style="color:white;">
@@ -610,59 +611,9 @@
 				} 
 
 			});
-			
-			// Page Info Section:
-			let currentPage = 0;
-			let pages = [];
-
-			// console.log("✅ index, line 485");
-			function loadPage(n) {
-				// console.log("✅ index, line 487, loadPage happening");
-				if (pages.length === 0) return;
-				const page = pages[n];
-				$("#calendar-info").html(`
-					<h3>${page.title}</h3>
-					<div style="margin-top: 1em;">
-						<button class="arrow-button" id="prev-info">⬅️</button>
-						<button class="arrow-button" id="next-info">➡️</button>
-					</div>
-					<p>${page.body}</p>
-				`);
-				currentPage = n;
-
-				$("#prev-info").on("click", () => {
-					if (currentPage > 0) loadPage(currentPage - 1);
-					else loadPage(pages.length - 1);
-				});
-				$("#next-info").on("click", () => {
-					if (currentPage < pages.length - 1) loadPage(currentPage + 1);
-					else loadPage(0);
-				});
-			}
-
-			// console.log("✅ index, line 510");
-			$.getJSON("app/resources/info.json", function(JSONdata) { //so far I've tried app/res..., /app/re... and ./app/... This is index.html app is in the directory with index.html
-				// console.log("✅ index, line 512, JSON info loaded");
-				pages = JSONdata;
-				loadPage(0);
-				// console.log("✔ index, line 515,  Pages loaded, and #pages is: "+pages.length, pages);
-			}).fail(function(jqxhr, textStatus, error) {
-				console.error("❌ Failed to load JSON:", textStatus, error);//this is line 156
-			});
-						
+									
 		</script>
 		
-		<script>
-			document.addEventListener('DOMContentLoaded', () => {
-				window.addEventListener('scroll', MayanCalendarController.CalendarNavigation.updateFloatingNavPosition);
-				window.addEventListener('resize', MayanCalendarController.CalendarNavigation.updateFloatingNavPosition);
-				
-				// document.addEventListener('DOMContentLoaded', MayanCalendarController.CalendarNavigation.updateFloatingNavPosition);
-				
-				// Initial position update
-				// MayanCalendarController.CalendarNavigation.updateFloatingNavPosition();
-			});
-		</script>
 		<div id="credits" class="wide-container info-box">
 			<p style="text-align: center; font-size: 0.9rem; color: #666;">
 			<br><a class="cool-link" href="/launchblaster">Launch Blaster</a> • <a class="cool-link" href="/">More</a>
