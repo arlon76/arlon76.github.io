@@ -52,6 +52,7 @@ export const InfoNavigation = (function () {
 		prevBtn.textContent = "⬅️";
 		prevBtn.addEventListener("click", () => {
 			// window.dispatchEvent(new CustomEvent("info-nav-prev"));
+			document.documentElement.scrollTop = 1700;
 			onPrev();
 		});
 
@@ -60,6 +61,7 @@ export const InfoNavigation = (function () {
 		nextBtn.textContent = "➡️";
 		nextBtn.addEventListener("click", () => {
 			// window.dispatchEvent(new CustomEvent("info-nav-next"));
+			document.documentElement.scrollTop = 1700;
 			onNext();
 		});
 
