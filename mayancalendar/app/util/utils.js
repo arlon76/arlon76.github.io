@@ -185,10 +185,49 @@ function createHtmlTagUtility() {
 }
 
 // Create the tag utility
-const tag = createHtmlTagUtility();
+// const tag = createHtmlTagUtility(); // replace with the below
+
+// 4. DOM node utility
+function createDomTagUtility() {
+  return new Proxy(
+    function (tag, content = "", attributes = {}, selfClosing = false) {
+      const el = document.createElement(tag);
+      Object.entries(attributes).forEach(([k, v]) => el.setAttribute(k, v));
+
+      if (typeof content === "string") {
+        el.textContent = content;
+      } else if (content instanceof Node) {
+        el.appendChild(content);
+      } else if (Array.isArray(content)) {
+        content.forEach(child => {
+          if (typeof child === "string") {
+            el.appendChild(document.createTextNode(child));
+          } else if (child instanceof Node) {
+            el.appendChild(child);
+          }
+        });
+      }
+
+      return el;
+    },
+    {
+      get: (target, tag) => (content = "", attributes = {}, selfClosing = false) =>
+        target(tag, content, attributes, selfClosing)
+    }
+  );
+}
 
 
+// 5. Create the final tag utility
+const tag = new Proxy({}, {
+  get(_, prop) {
+    return tag.html[prop]; // legacy support: tag.div == tag.html.div
+  }
+});
 
+// Attach html & dom as branches
+tag.html = createHtmlTagUtility();
+tag.dom = createDomTagUtility();
 
 
 
