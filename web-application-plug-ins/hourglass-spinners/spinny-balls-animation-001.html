@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<!--
+===============================================================================
+Orbit Spinner Demo Page
+===============================================================================
+
+This HTML file is the companion demonstration and test harness for:
+
+  spinner-orbit.js
+
+The JavaScript module implements a fully encapsulated SVG orbit-spinner
+animation engine with configurable visuals, mounting behavior, lifecycle
+management, fade-in effects, and animated destruction sequences.
+
+This page exists for several purposes:
+
+  • Demonstrate real working usage patterns
+  • Provide executable examples
+  • Serve as a development sandbox
+  • Allow rapid visual iteration
+  • Show intended API usage
+  • Test custom SVG payloads
+  • Exercise lifecycle and release behavior
+
+The demo intentionally includes multiple example buttons illustrating different
+modes of operation, including:
+
+  • Fullscreen centered spinner
+  • Spinner mounted into a specific page container
+  • Manual toggle create/release behavior
+  • Custom SVG orbiting graphics
+  • Timed automatic teardown
+
+-------------------------------------------------------------------------------
+Important
+-------------------------------------------------------------------------------
+
+Instructions for use of the animation engine itself are documented INSIDE the
+JavaScript module file:
+
+  spinner-orbit.js
+
+Read the module header comments for:
+
+  • architecture notes
+  • API documentation
+  • configuration options
+  • lifecycle behavior
+  • customization techniques
+  • SVG replacement guidance
+
+This HTML file is intentionally lightweight and example-oriented, while the
+module contains the canonical implementation documentation.
+
+===============================================================================
+-->
+<!--
+-------------------------------------------------------------------------------
+Development / File-Protocol Note
+-------------------------------------------------------------------------------
+
+Although this project is architected as a proper standalone ES module system,
+the current demo file may instead contain the module source pasted directly
+inside the HTML <script> block, with the import statements commented out.
+
+This was done intentionally so the demo can run directly from the local file
+system using the browser's file:// protocol, without requiring a local web
+server. Some browsers enforce module-loading restrictions when importing ES
+modules directly from file protocol paths.
+
+To restore the intended module structure:
+
+  1. Remove the pasted module source from this HTML file
+  2. Move that code back into:
+
+       spinner-orbit.js
+
+  3. Uncomment the original import statements
+  4. Serve the files from a local web server
+
+After doing so, the project functions again as a standard modern ES module
+architecture with proper separation between implementation and demo code.
+
+-------------------------------------------------------------------------------
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Orbit Spinner Demo</title>
+
+<style>
+  body {
+    margin: 0;
+    background: #0e1621;
+    color: white;
+    font-family: system-ui;
+    overflow: hidden;
+  }
+
+  .controls {
+    position: fixed;
+    z-index: 10;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    gap: 10px;
+  }
+
+  button {
+    background: #17304a;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #24507d;
+  }
+
+  #panel {
+    position: absolute;
+    right: 40px;
+    bottom: 40px;
+    width: 320px;
+    height: 320px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    background: rgba(255,255,255,0.04);
+  }
+</style>
+</head>
+
+<body>
+
+<div class="controls">
+  <button id="fullscreen">
+    Fullscreen Spinner
+  </button>
+
+  <button id="panelSpinner">
+    Panel Spinner
+  </button>
+
+  <button id="manual">
+    Manual Release
+  </button>
+</div>
+
+<div id="panel"></div>
+
+<script type="module">
+  //import { createOrbitSpinner } // Code for this pasted below, here:
+    //from './spinner-orbit.js' // Non-existant - actual code for this pasted below, right here:
+/* Hourglass Animation Module Included Directly, Here: (So that it can be tested with file protocol) */
+
+/* ======================Orbit Spinner Module===================================
+-              ===========Orbit Spinner Module======
+===============================================================================
+
+What This Is
+-------------------------------------------------------------------------------
+
+This module implements a fully self-contained animated SVG orbit spinner using
+modern ES module JavaScript and a mostly-functional architecture style.
+
+The default visual presentation is three glossy orbiting spheres rotating around
+a shared center point, behaving as a modernized "hourglass" or "loading"
+indicator. The system supports alternate SVG payloads as drop-in replacements,
+allowing arbitrary artwork to orbit instead of the default spheres.
+
+The animation engine supports:
+
+  • Multiple simultaneous instances
+  • Mounting into arbitrary page containers
+  • Full-page centered overlays
+  • Configurable duration timers
+  • Manual release / destruction
+  • Fade-in intro animation
+  • Explosion / particle poof teardown
+  • Custom SVG skins via factory callbacks
+  • Fully encapsulated lifecycle management
+  • Dependency-free operation
+  • Native SVG rendering
+  • requestAnimationFrame animation timing
+
+The module intentionally separates:
+
+  • Animation engine logic
+  • Geometry calculations
+  • DOM lifecycle management
+  • Visual SVG artwork
+
+This allows visual assets to evolve independently from the animation system.
+
+
+Architecture Notes
+-------------------------------------------------------------------------------
+
+The codebase favors a modern declarative style:
+
+  • Functional transformation patterns
+  • Immutable config normalization
+  • Composition-oriented helpers
+  • Array.map() over imperative loops where practical
+  • Minimal mutable shared state
+  • Small controlled imperative shell
+  • Expression-oriented rendering
+
+A small amount of stateful object behavior is intentionally retained for
+instance lifecycle ownership and teardown control.
+
+
+===============================================================================
+Basic Usage
+===============================================================================
+
+Import the module:
+
+  import { createOrbitSpinner }
+    from './spinner-orbit.js'
+
+
+Create a fullscreen spinner:
+
+  const spinner = createOrbitSpinner({
+    duration: 4000
+  })
+
+
+Create a spinner inside a container:
+
+  const spinner = createOrbitSpinner({
+    container: '#panel',
+    size: 240
+  })
+
+
+Manually destroy a spinner:
+
+  spinner.release()
+
+
+===============================================================================
+Configuration Options
+===============================================================================
+
+size
+  Total SVG viewport size in pixels.
+
+radius
+  Orbit radius of orbiting elements.
+
+ballSize
+  Size of default glossy sphere payloads.
+
+speed
+  Orbit rotation speed multiplier.
+
+duration
+  Optional auto-release timeout in milliseconds.
+  Use 0 for persistent mode.
+
+container
+  Optional CSS selector indicating mounting target.
+
+centered
+  Whether the SVG should center itself automatically.
+
+className
+  Optional CSS class assigned to the SVG root.
+
+explodeDuration
+  Duration of destruction particle animation.
+
+fadeInDuration
+  Duration of intro fade / scale animation.
+
+svgFactory(index)
+  Optional callback returning custom SVG elements.
+  Used to replace default orbiting balls with arbitrary SVG artwork.
+
+onRelease()
+  Callback fired after full teardown completion.
+
+
+===============================================================================
+Custom SVG Payloads
+===============================================================================
+
+Custom orbiting graphics may be injected using svgFactory():
+
+  createOrbitSpinner({
+    svgFactory: index => createFlower()
+  })
+
+The callback should return an SVG node, usually a <g> group.
+
+
+===============================================================================
+Important
+===============================================================================
+
+The companion demo HTML page paired with this module contains fully working
+interactive examples demonstrating:
+
+  • Fullscreen mode
+  • Container mode
+  • Manual toggle release
+  • Custom SVG orbiters
+  • Fade-in animation
+  • Automatic timed teardown
+
+If you are learning or modifying this module, start by reading the demo page.
+
+The HTML file is intended to function as both:
+  • a live test harness
+  • executable documentation
+
+===============================================================================
+*/
+
+const SVG_NS = 'http://www.w3.org/2000/svg'
+
+const defaults = Object.freeze({
+  size: 240,
+  radius: 54,
+  ballSize: 18,
+  speed: 1,
+  duration: 0,
+  container: null,
+  centered: true,
+  className: '',
+  explodeDuration: 600,
+  onRelease: () => {},
+  svgFactory: null,
+  fadeInDuration: 350
+})
+
+const clamp = (v, min, max) => Math.min(max, Math.max(min, v))
+
+const polar = (cx, cy, r, a) => ({
+  x: cx + Math.cos(a) * r,
+  y: cy + Math.sin(a) * r
+})
+
+const createSvg = ({ size, className }) => {
+  const svg = document.createElementNS(SVG_NS, 'svg')
+
+  Object.entries({
+    viewBox: `0 0 ${size} ${size}`,
+    width: size,
+    height: size,
+    class: className
+  }).map(([k, v]) => svg.setAttribute(k, v))
+
+  return svg
+}
+
+const createDefaultBall = ({ size, id }) => {
+  const g = document.createElementNS(SVG_NS, 'g')
+
+  const glow = document.createElementNS(SVG_NS, 'circle')
+  const core = document.createElementNS(SVG_NS, 'circle')
+  const shine = document.createElementNS(SVG_NS, 'ellipse')
+
+  ;[
+    [glow, {
+      r: size * 0.9,
+      fill: 'rgba(255,255,255,0.18)'
+    }],
+    [core, {
+      r: size,
+      fill: `url(#grad-${id})`
+    }],
+    [shine, {
+      rx: size * 0.45,
+      ry: size * 0.25,
+      cx: -size * 0.25,
+      cy: -size * 0.25,
+      fill: 'rgba(255,255,255,0.72)',
+      transform: 'rotate(-25)'
+    }]
+  ].map(([el, attrs]) =>
+    Object.entries(attrs)
+      .map(([k, v]) => el.setAttribute(k, v))
+  )
+
+  g.append(glow, core, shine)
+
+  return g
+}
+
+const createGradientDefs = (svg, count = 3) => {
+  const defs = document.createElementNS(SVG_NS, 'defs')
+
+  Array.from({ length: count })
+    .map((_, i) => {
+      const grad = document.createElementNS(SVG_NS, 'radialGradient')
+
+      grad.setAttribute('id', `grad-${i}`)
+
+      ;[
+        ['0%', '#ffffff'],
+        ['35%', '#6cf'],
+        ['100%', '#06c']
+      ].map(([offset, color]) => {
+        const stop = document.createElementNS(SVG_NS, 'stop')
+
+        stop.setAttribute('offset', offset)
+        stop.setAttribute('stop-color', color)
+
+        grad.appendChild(stop)
+      })
+
+      return grad
+    })
+    .map(grad => defs.appendChild(grad))
+
+  svg.appendChild(defs)
+}
+
+const createExplosion = ({ svg, x, y, size }) =>
+  Array.from({ length: 18 })
+    .map((_, i) => {
+      const p = document.createElementNS(SVG_NS, 'circle')
+
+      const angle = (Math.PI * 2 * i) / 18
+      const distance = 40 + Math.random() * 80
+
+      Object.entries({
+        r: 2 + Math.random() * 5,
+        cx: x,
+        cy: y,
+        fill: '#8df'
+      }).map(([k, v]) => p.setAttribute(k, v))
+
+      svg.appendChild(p)
+
+      return {
+        el: p,
+        dx: Math.cos(angle) * distance,
+        dy: Math.sin(angle) * distance
+      }
+    })
+
+const mountTarget = config =>
+  config.container
+    ? document.querySelector(config.container)
+    : document.body
+
+export const createOrbitSpinner = userConfig => {
+  const config = Object.freeze({
+    ...defaults,
+    ...userConfig
+  })
+
+  const target = mountTarget(config)
+
+  const svg = createSvg(config)
+svg.style.opacity = 0
+svg.style.transition = 'opacity 120ms linear'
+  createGradientDefs(svg)
+
+  const root = document.createElementNS(SVG_NS, 'g')
+
+  svg.appendChild(root)
+
+  const center = config.size / 2
+
+  const balls = Array.from({ length: 3 })
+    .map((_, i) =>
+      config.svgFactory
+        ? config.svgFactory(i)
+        : createDefaultBall({
+            size: config.ballSize,
+            id: i
+          })
+    )
+
+  balls.map(ball => root.appendChild(ball))
+
+  if (config.centered) {
+    Object.assign(svg.style, {
+      position: config.container ? 'absolute' : 'fixed',
+      inset: 0,
+      margin: 'auto',
+      overflow: 'visible',
+      pointerEvents: 'none'
+    })
+  }
+
+  target.appendChild(svg)
+
+  let raf = 0
+  let released = false
+
+  const start = performance.now()
+
+  const render = now => {
+    const elapsed = now - start
+
+
+
+
+
+
+
+
+
+  const introT =
+    clamp(
+      elapsed / config.fadeInDuration,
+      0,
+      1
+    )
+
+  const easedIntro =
+    1 - Math.pow(1 - introT, 3)
+
+  svg.style.opacity = easedIntro
+
+  const introScale =
+    0.82 + (easedIntro * 0.18)
+
+  root.setAttribute(
+    'transform',
+    `
+      scale(${introScale})
+      translate(
+        ${center * ((1 / introScale) - 1)},
+        ${center * ((1 / introScale) - 1)}
+      )
+    `
+  )
+
+
+
+
+    const rotation =
+      ((elapsed / 1000) * config.speed * Math.PI * 2)
+
+    balls.map((ball, i) => {
+      const angle =
+        rotation + ((Math.PI * 2) / balls.length) * i
+
+      const { x, y } = polar(
+        center,
+        center,
+        config.radius,
+        angle
+      )
+
+      const scale = /* aka 'pulse' */
+        0.82 /* 0.84 alt */ + ((Math.sin(angle + elapsed * 0.002) + 1) / 2) * 0.35 /* 0.32 alt */
+
+      ball.setAttribute(
+        'transform',
+        `
+          translate(${x}, ${y})
+          scale(${scale})
+        `
+      )
+    })
+
+    const expired =
+      config.duration > 0 &&
+      elapsed >= config.duration
+
+    expired
+      ? release()
+      : (raf = requestAnimationFrame(render))
+  }
+
+  const release = () => {
+    if (released) return
+
+    released = true
+
+    cancelAnimationFrame(raf)
+
+    const particles = createExplosion({
+      svg,
+      x: center,
+      y: center,
+      size: config.size
+    })
+
+    balls.map(ball => ball.remove())
+
+    const boomStart = performance.now()
+
+    const animateBoom = now => {
+      const t = clamp(
+        (now - boomStart) / config.explodeDuration,
+        0,
+        1
+      )
+
+      particles.map(({ el, dx, dy }) => {
+        el.setAttribute('cx', center + dx * t)
+        el.setAttribute('cy', center + dy * t)
+        el.setAttribute('opacity', 1 - t)
+      })
+
+      t < 1
+        ? requestAnimationFrame(animateBoom)
+        : (
+            svg.remove(),
+            config.onRelease?.()
+          )
+    }
+
+    requestAnimationFrame(animateBoom)
+  }
+
+  raf = requestAnimationFrame(render)
+
+  return Object.freeze({
+    release,
+    element: svg
+  })
+}
+
+
+
+/* End Hourglass Animation Module */
+
+/* Begin Hourglass Animation Module Demo Usage Examples Area: */
+
+
+
+  document
+    .querySelector('#fullscreen')
+    .onclick = () =>
+      createOrbitSpinner({
+        duration: 4000,
+        speed: 1.2,
+        size: 280
+      })
+
+  document
+    .querySelector('#panelSpinner')
+    .onclick = () =>
+      createOrbitSpinner({
+        container: '#panel',
+        duration: 5000,
+        size: 240,
+        radius: 70,
+        speed: 0.8
+      })
+
+  /* document // Replaced by the below
+    .querySelector('#manual')
+    .onclick = () => {
+      const spinner = createOrbitSpinner({
+        speed: 2
+      })
+
+      setTimeout(
+        () => spinner.release(),
+        2500
+      )
+    } */
+    
+    /* Replacement for that: */
+    
+    
+      let liveSpinner = null
+
+  const createDaisy = () => {
+    const SVG_NS = 'http://www.w3.org/2000/svg'
+
+    const g = document.createElementNS(SVG_NS, 'g')
+
+    const petals = Array.from({ length: 12 })
+      .map((_, i) => {
+        const p = document.createElementNS(SVG_NS, 'ellipse')
+
+        const angle = (360 / 12) * i
+
+        Object.entries({
+          rx: 7,
+          ry: 18,
+          cx: 0,
+          cy: -18,
+          fill: '#fffdf5',
+          stroke: '#d7d2c8',
+          'stroke-width': 0.7,
+          transform: `rotate(${angle})`
+        })
+        .map(([k, v]) => p.setAttribute(k, v))
+
+        return p
+      })
+
+    const center = document.createElementNS(SVG_NS, 'circle')
+
+    Object.entries({
+      r: 9,
+      fill: '#ffcf33',
+      stroke: '#e0a800',
+      'stroke-width': 1.2
+    })
+    .map(([k, v]) => center.setAttribute(k, v))
+
+    const stem = document.createElementNS(SVG_NS, 'path')
+
+    Object.entries({
+      d: `
+        M 0 8
+        C -2 22,
+          -2 40,
+           0 62
+      `,
+      stroke: '#4ea44e',
+      'stroke-width': 3,
+      fill: 'none',
+      'stroke-linecap': 'round'
+    })
+    .map(([k, v]) => stem.setAttribute(k, v))
+
+    g.append(
+      stem,
+      ...petals,
+      center
+    )
+
+    return g
+  }
+
+  document
+    .querySelector('#manual')
+    .onclick = () => {
+
+      if (liveSpinner) {
+        liveSpinner.release()
+        liveSpinner = null
+        return
+      }
+
+      liveSpinner = createOrbitSpinner({
+        speed: 1.6,
+        radius: 72,
+        size: 320,
+        fadeInDuration: 450,
+
+        svgFactory: () => createDaisy(),
+
+        onRelease: () => {
+          liveSpinner = null
+        }
+      })
+    }
+    
+    
+    
+</script>
+
+</body>
+</html>
