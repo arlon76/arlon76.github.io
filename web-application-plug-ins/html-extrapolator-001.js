@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- *  ⚡ HTML EXTRAPOLATOR (SBR-DOM-ENGINE-v1)
+ *  ⚡ HTML EXTRAPOLATOR (DOM-ENGINE-v1)
  * ============================================================================
  * An artistic, ultra-elegant micro-framework for declarative DOM generation.
  * Uses ES6 Proxies for fluent tag extrapolation & native DOM generation.
@@ -88,7 +88,7 @@ export const tag = new Proxy(engine.build.bind(engine), {
 export const toHtmlString = (element) => element.outerHTML;
 
 /* ============================================================================
- *  🤖 AI INSTRUCTION PROMPT SHEET (Copy/Paste to other AIs for usage context)
+ *  🤖 Instructions
  * ============================================================================
  * This module exports a dynamic Proxy function `tag` (and `toHtmlString` for serialization) for fluent UI composition.
  * 
@@ -100,32 +100,33 @@ export const toHtmlString = (element) => element.outerHTML;
  * - `className`: Maps directly to element.className (use instead of 'class')
  * - `listen`: Expects an object mapping event names to handler functions.
  * - `to`: DOM Selector String or HTMLElement. If provided, mounts element immediately.
-- DOM Mounting: Pass `to: '#selector'` or `to: elementRef` to inject the built element directly into the DOM.
-- Events: Pass functions inside a nested `listen` object, e.g., listen: { click: (e) => handle(e) }.
- - HTML Strings: Pass any built HTMLElement to `toHtmlString(element)` to export it as a raw HTML string.
+ * - DOM Mounting: Pass `to: '#selector'` or `to: elementRef` to inject the built element directly into the DOM.
+ * - Events: Pass functions inside a nested `listen` object, e.g., listen: { click: (e) => handle(e) }.
+ * - HTML Strings: Pass any built HTMLElement to `toHtmlString(element)` to export it as a raw HTML string.
  * 
- * EXAMPLES:
+ * Use Case Examples:
  *   tag.div({ className: 'card' }, tag.h1({}, 'Hello World'))
+ *   tag.div({ className: 'card' }, tag.h3({}, 'Title'), tag.br())
  *   tag.button({ listen: { click: () => alert('Hi') } }, 'Click Me')
+ *   tag.button({ className: 'btn', listen: { click: openMenu } }, 'Open')
  *   tag.div({ to: '#game-container', id: 'player1' }, 'Appended Directly!')
-- const rawHtml = toHtmlString(tag.span({ className: 'text' }, 'Rendered String'))
-
-----------------------------------
-[API Context: SBR-DOM-Engine-v1 is available globally as `tag` (and `toHtmlString` for serialization). It uses a Proxy to dynamically map property access to native document.createElement. It handles nested child arrays via .flat(), skips bodies for void tags (br, hr, img, input, link, meta, source), and returns native HTMLElements.
-
-Syntax Rules:
-- Core signature: tag.tagName({attributes}, ...children) OR tag('tagName', {attributes}, ...children)
-- Standard attributes: Pass normally (e.g., id: 'id'). Use `className` for classes.
-- DOM Mounting: Pass `to: '#selector'` or `to: elementRef` to inject the built element directly into the DOM.
-- Events: Pass functions inside a nested `listen` object, e.g., listen: { click: (e) => handle(e) }.
-- HTML Strings: Pass any built HTMLElement to `toHtmlString(element)` to export it as a raw HTML string.
-
-Usage Examples for code generation:
-- tag.div({ className: 'card' }, tag.h3({}, 'Title'), tag.br())
-- tag.button({ className: 'btn', listen: { click: openMenu } }, 'Open')
-- tag.section({ to: '#hud', id: 'score' }, 'Points: 0')
-- const rawHtml = toHtmlString(tag.span({ className: 'text' }, 'Rendered String'))
-
-Generate all UI code using this functional pattern instead of raw HTML strings or native imperative DOM manipulation.]
+ *   tag.section({ to: '#hud', id: 'score' }, 'Points: 0')
+ *   const rawHtml = toHtmlString(tag.span({ className: 'text' }, 'Rendered String'))
+ *
+ * API Context: DOM-Engine-v1 is available globally as `tag` (and `toHtmlString` for serialization).
+ *   It uses a Proxy to dynamically map property access to native document.createElement. It handles nested
+ *   child arrays via .flat(), skips bodies for void tags (br, hr, img, input, link, meta, source), and 
+ *   returns native HTMLElements.
+ *
+ * Syntax Rules:
+ * - Core signature: tag.tagName({attributes}, ...children) OR tag('tagName', {attributes}, ...children)
+ * - Standard attributes: Pass normally (e.g., id: 'id'). Use `className` for classes.
+ * - DOM Mounting: Pass `to: '#selector'` or `to: elementRef` to inject the built element directly into the DOM.
+ * - Events: Pass functions inside a nested `listen` object, e.g., listen: { click: (e) => handle(e) }.
+ * - HTML Strings: Pass any built HTMLElement to `toHtmlString(element)` to export it as a raw HTML string.
+ *
+Now we can use this functional pattern to generate HTML instead of writing raw HTML strings or native imperative DOM manipulation.
+ *
+ *
  * ============================================================================
  */
