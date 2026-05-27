@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>SUPER BOMB REVERSI DEV REENTRY CONSOLE :: CONTEXT RESTORE</title>
+
+<style>
+
+html, body {
+	margin:0;
+	padding:0;
+	width:100%;
+	height:100%;
+	overflow:hidden;
+	font-family:Orbitron, monospace;
+	color:#00ff9c;
+	background:#000;
+}
+
+body {
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	background:
+		radial-gradient(circle at center, #001a12 0%, #000 70%);
+}
+
+/* GRID FIELD */
+body:before {
+	content:"";
+	position:fixed;
+	inset:0;
+	background:
+		linear-gradient(rgba(0,255,140,.08) 1px,transparent 1px),
+		linear-gradient(90deg,rgba(0,255,140,.08) 1px,transparent 1px);
+	background-size:45px 45px;
+	transform:perspective(900px) rotateX(75deg) scale(2);
+	animation:gridmove 6s linear infinite;
+	opacity:.35;
+}
+
+@keyframes gridmove {
+	from { background-position:0 0,0 0; }
+	to { background-position:0 500px,0 500px; }
+}
+
+/* SCANLINES */
+.scanlines {
+	position:fixed;
+	inset:0;
+	pointer-events:none;
+	background:repeating-linear-gradient(
+		to bottom,
+		rgba(255,255,255,.02) 0px,
+		rgba(255,255,255,.02) 1px,
+		transparent 2px,
+		transparent 4px
+	);
+	opacity:.2;
+}
+
+/* MAIN PANEL */
+.panel {
+	position:relative;
+	z-index:2;
+	width:820px;
+	max-width:92vw;
+	padding:40px;
+	border:1px solid #00ff9c;
+	background:rgba(0,0,0,.85);
+	box-shadow:
+		0 0 25px rgba(0,255,156,.35),
+		inset 0 0 50px rgba(0,255,156,.08);
+	text-align:left;
+}
+
+/* TITLE */
+.title {
+	font-size:40px;
+	letter-spacing:5px;
+	text-shadow:0 0 12px #00ff9c, 0 0 30px #00ff9c;
+	margin-bottom:20px;
+	text-align:center;
+}
+
+/* SECTIONS */
+.section {
+	margin-top:18px;
+	padding-top:10px;
+	border-top:1px solid rgba(0,255,156,.2);
+}
+
+.label {
+	color:#7dffd0;
+	font-size:14px;
+	letter-spacing:2px;
+	margin-bottom:6px;
+}
+
+.block {
+	font-size:15px;
+	line-height:1.5;
+	color:#cffff0;
+}
+
+.highlight {
+	color:#00e5ff;
+}
+
+.warn {
+	color:#ffcc66;
+}
+
+.danger {
+	color:#ff4d6d;
+}
+
+.small {
+	font-size:12px;
+	opacity:.75;
+}
+
+.pulse {
+	animation:pulse 1.2s infinite alternate;
+}
+
+@keyframes pulse {
+	from { opacity:.5; }
+	to { opacity:1; }
+}
+
+</style>
+
+<script>
+setTimeout(function(){
+	// keep it local, keep it intentional
+	// window.location = "http://localhost/";
+}, 5000);
+</script>
+
+</head>
+
+<body>
+
+<div class="scanlines"></div>
+
+<div class="panel">
+
+	<div class="title">
+		SUPER BOMB REVERSI To-Do 202605252359
+	</div>
+
+	<div class="section">
+		<div class="label">STATE SNAPSHOT</div>
+		<div class="block">
+			✔ Auth refactor COMPLETE: session dependency removed<br>
+			✔ Single signed cookie system: <span class="highlight">sbr_auth</span><br>
+			✔ Google + Dev login unified under HMAC token payload<br>
+			✔ Runtime now fully token-driven (no scattered session reads)
+		</div>
+	</div>
+
+	<div class="section">
+		<div class="label">CRITICAL REMINDER</div>
+		<div class="block warn">
+			You renamed index.php to:<br>
+			<span class="highlight">
+			monday_sucks_20260526_index_rename_back.php
+			</span><br><br>
+			Do NOT lose this file name or future-you will waste 40 minutes.
+		</div>
+	</div>
+
+	<div class="section">
+		<div class="label">NEXT DEBUG TARGET (HIGH PRIORITY)</div>
+		<div class="block danger">
+			show_game without tog is choking intermittently.<br><br>
+			LIKELY AREA:<br>
+			- auto-nav queue edge case<br>
+			- missing termination condition<br>
+			- double trigger from navigation loop<br><br>
+
+			START TRACE HERE:<br>
+			→ reproduce with 3 games (bh baby path)<br>
+			→ force end-of-queue state<br>
+			→ confirm show_game behavior WITHOUT auto-nav<br>
+		</div>
+	</div>
+
+	<div class="section">
+		<div class="label">KNOWN WEIRDNESS</div>
+		<div class="block">
+			• Two bottom links exist where only one should<br>
+			• Likely duplicated render path OR fallback nav injection<br>
+			• Treat as symptom, not root cause
+		</div>
+	</div>
+
+	<div class="section">
+		<div class="label">ARCHITECTURE PROGRESS</div>
+		<div class="block">
+			Session state eliminated.<br>
+			All auth now flows through:<br>
+			<span class="highlight">sbr_auth → signed JSON payload → HMAC verification</span><br><br>
+
+			Dev auth is unified.<br>
+			It is just: <span class="highlight">dev_auth flag inside token</span>
+		</div>
+	</div>
+
+	<div class="section">
+		<div class="label">STATUS</div>
+		<div class="block pulse">
+			SITE: stable-ish<br>
+			AUTH: clean<br>
+			GAME ENGINE: mostly stable, one known choke point<br>
+		</div>
+	</div>
+
+	<div class="section">
+		<div class="label">REENTRY DIRECTIVE</div>
+		<div class="block small">
+			Next:<br>
+			1. Fix show_game toggle choke<br>
+			2. Find duplicate link render path<br>
+			3. Re-test full auth flow (Google + Dev)<br>
+			4. Only then expand game modes (guess-a-number later)
+		</div>
+	</div>
+
+</div>
+
+</body>
+</html>
