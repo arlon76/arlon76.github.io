@@ -19,7 +19,6 @@ sudo apt install -y \
   pciutils \
   usbutils \
   inxi \
-  neofetch \
   fastfetch \
   dstat \
   glances \
@@ -32,6 +31,7 @@ sudo apt install -y \
   unzip \
   tar
 
+  # neofetch \
 echo
 echo "=== SENSORS SETUP ==="
 sudo sensors-detect --auto || true

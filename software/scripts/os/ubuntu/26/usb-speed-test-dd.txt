@@ -1,0 +1,12 @@
+usb steed test
+this will sort of lock-ish up the computer for about 30 seconds:
+
+sync; dd if=/dev/zero of=~/speedtest.bin bs=1M count=1024 conv=fdatasync status=progress; sync; dd if=~/speedtest.bin of=/dev/null bs=1M status=progress
+
+lon@UB25-FM64-HP64-1:~/github/arlon76.github.io$ sync; dd if=/dev/zero of=~/speedtest.bin bs=1M count=1024 conv=fdatasync status=progress; sync; dd if=~/speedtest.bin of=/dev/null bs=1M status=progress
+1024+0 records in
+1024+0 records out
+1073741824 bytes (1.1 GB, 1.0 GiB) copied, 46.4689 s, 23 MB/s
+1024+0 records in
+1024+0 records out
+1073741824 bytes (1.1 GB, 1.0 GiB) copied, 0.181325 s, 5.9 GB/s
