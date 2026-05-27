@@ -50,7 +50,7 @@ ip route show
 
 echo
 echo "== PING TEST (ROUTER) =="
-ping -c 5 192.168.1.1
+ping -c 5 192.168.0.1
 
 echo
 echo "== PING TEST (INTERNET IP) =="
