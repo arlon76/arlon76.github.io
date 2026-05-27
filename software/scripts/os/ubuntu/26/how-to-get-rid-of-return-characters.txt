@@ -1,0 +1,9 @@
+
+
+
+
+
+
+
+
+sed -i 's/\r$//' diagnostic-network-tools-ubuntu-26-1-install-20260526.sh
